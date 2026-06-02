@@ -12,6 +12,7 @@ export default function OnboardingPage() {
   const [loadingLocations, setLoadingLocations] = useState(false);
   const [activatingLocation, setActivatingLocation] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [debugData, setDebugData] = useState<any>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -86,6 +87,15 @@ export default function OnboardingPage() {
         setError(data.error);
       } else if (Array.isArray(data)) {
         setLocations(data);
+        if (data.length === 0) {
+          // Busca os dados nativos do Google para debugar
+          fetch('/api/google/debug', {
+            headers: { Authorization: `Bearer ${session.access_token}` }
+          })
+            .then((r) => r.json())
+            .then((debugRes) => setDebugData(debugRes))
+            .catch(() => {});
+        }
       }
     } catch (e) {
       console.error(e);
@@ -223,6 +233,15 @@ export default function OnboardingPage() {
                   >
                     Tentar com outra conta Google
                   </button>
+                  
+                  {debugData && (
+                    <div className="mt-6 text-left bg-black/50 p-4 rounded-lg border border-gray-800 overflow-auto max-h-[300px]">
+                      <h5 className="text-[#00ff9d] text-[10px] font-bold uppercase mb-2">Google API Debug Log:</h5>
+                      <pre className="text-[10px] text-gray-400 whitespace-pre-wrap font-mono">
+                        {JSON.stringify(debugData, null, 2)}
+                      </pre>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="space-y-3.5 max-h-[300px] overflow-y-auto pr-1">
