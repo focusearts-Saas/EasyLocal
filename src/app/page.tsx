@@ -1164,7 +1164,7 @@ export default function Dashboard() {
               )}
               {activeTab === 'gbp-cards' && <TabGBPCards gbpData={gbpData} />}
               {activeTab === 'gbp-evolution' && <TabGBPEvolution gbpData={gbpData} clientId={selectedClient?.id} />}
-              {activeTab === 'integrations' && <TabIntegrations session={session} onSync={fetchSites} />}
+              {activeTab === 'integrations' && <TabIntegrations session={session} onSync={fetchSites} selectedClient={selectedClient} />}
             </div>
           )}
 

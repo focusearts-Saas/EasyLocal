@@ -7,6 +7,7 @@ import { ShieldCheck, AlertCircle, RefreshCw, KeyRound, CheckCircle, Trash2, Ext
 interface TabIntegrationsProps {
   session: any;
   onSync?: () => void;
+  selectedClient?: any;
 }
 
 export default function TabIntegrations({ session, onSync }: TabIntegrationsProps) {
@@ -15,6 +16,15 @@ export default function TabIntegrations({ session, onSync }: TabIntegrationsProp
   const [actionLoading, setActionLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [whatsapp, setWhatsapp] = useState('');
+  const [savingWpp, setSavingWpp] = useState(false);
+
+  useEffect(() => {
+    if (selectedClient?.owner_whatsapp) {
+      setWhatsapp(selectedClient.owner_whatsapp);
+    }
+  }, [selectedClient]);
 
   const fetchIntegration = async () => {
     if (!session?.user?.id) return;
@@ -98,6 +108,26 @@ export default function TabIntegrations({ session, onSync }: TabIntegrationsProp
       setError(err.message || 'Erro inesperado ao sincronizar perfis.');
     } finally {
       setSyncing(false);
+    }
+  };
+
+  const handleSaveWhatsapp = async () => {
+    if (!selectedClient?.id) return;
+    setSavingWpp(true);
+    try {
+      const { error: dbError } = await supabase
+        .from('clients')
+        .update({ owner_whatsapp: whatsapp })
+        .eq('id', selectedClient.id);
+
+      if (dbError) throw dbError;
+      alert('Número de WhatsApp salvo com sucesso! Você receberá alertas de novas avaliações.');
+      if (onSync) onSync();
+    } catch (err: any) {
+      console.error(err);
+      alert('Erro ao salvar o WhatsApp.');
+    } finally {
+      setSavingWpp(false);
     }
   };
 
@@ -272,6 +302,48 @@ export default function TabIntegrations({ session, onSync }: TabIntegrationsProp
             <span>Indisponível no momento</span>
           </button>
         </div>
+
+        {/* Card Alertas de WhatsApp */}
+        {selectedClient && (
+          <div className="bg-[#161b22] border border-[#00ff9d]/20 rounded-2xl p-6 shadow-lg shadow-[#00ff9d]/5 relative overflow-hidden md:col-span-2">
+            <div className="absolute top-0 right-0 w-[120px] h-[120px] rounded-full bg-[#00ff9d]/5 blur-2xl pointer-events-none"></div>
+            <div className="flex items-center gap-3.5 mb-6">
+              <div className="w-12 h-12 rounded-xl bg-[#00ff9d]/10 border border-[#00ff9d]/20 flex items-center justify-center text-[#00ff9d]">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-white text-sm">Alertas por WhatsApp (Pub/Sub)</h3>
+                <span className="text-[9px] font-bold text-[#00ff9d] tracking-wider uppercase">Notificações em Tempo Real</span>
+              </div>
+            </div>
+
+            <p className="text-gray-400 text-xs leading-relaxed mb-6">
+              Receba um aviso imediato no seu celular sempre que este local (<strong>{selectedClient.name}</strong>) receber uma nova avaliação no Google. Ideal para responder rápido e fidelizar clientes!
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 items-end">
+              <div className="flex-1 w-full space-y-2">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Número do WhatsApp (com DDD)</label>
+                <input
+                  type="text"
+                  value={whatsapp}
+                  onChange={(e) => setWhatsapp(e.target.value)}
+                  placeholder="Ex: 11999998888"
+                  className="w-full bg-[#0d1117] border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#00ff9d] transition-all"
+                />
+              </div>
+              <button
+                onClick={handleSaveWhatsapp}
+                disabled={savingWpp || !whatsapp}
+                className="w-full sm:w-auto bg-[#00ff9d] hover:bg-[#00e08a] text-gray-900 font-bold px-8 py-3 rounded-xl text-xs transition-all shadow-[0_0_15px_rgba(0,255,157,0.2)] disabled:opacity-50"
+              >
+                {savingWpp ? 'Salvando...' : 'Salvar Número'}
+              </button>
+            </div>
+          </div>
+        )}
 
       </div>
 
