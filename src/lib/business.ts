@@ -98,14 +98,11 @@ export async function listLocations(tokenSupabase?: string) {
       if (locData.locations) {
         const accountId = account.name.split('/')[1];
         
-        // Filtra apenas locais verificados ou que o usuário tem permissão ativa
-        const verified = locData.locations.filter((l: any) =>
-          l.metadata?.hasVoiceOfMerchant || l.metadata?.canUpdate
-        );
-
-        const formatted = verified.map((l: any) => ({
+        // Mapeia todas as empresas retornadas
+        const formatted = locData.locations.map((l: any) => ({
           ...l,
-          accountId: accountId
+          accountId: accountId,
+          isVerified: !!(l.metadata?.hasVoiceOfMerchant || l.metadata?.canUpdate)
         }));
         allLocations = [...allLocations, ...formatted];
       }
