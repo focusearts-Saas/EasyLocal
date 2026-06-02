@@ -322,3 +322,37 @@ export async function getLocationDetails(locationId: string, tokenSupabase?: str
     return null;
   }
 }
+
+export async function setPubSubTopic(accountId: string, topicName: string, tokenSupabase?: string) {
+  try {
+    const accessToken = await getAccessToken(tokenSupabase);
+    const url = `https://mybusinessnotifications.googleapis.com/v1/accounts/${accountId}/notificationSetting`;
+
+    const body = {
+      pubsubTopic: topicName,
+      notificationTypes: ["NEW_REVIEW", "UPDATED_REVIEW"]
+    };
+
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error('Erro ao registrar Pub/Sub no Google:', errorText);
+      return { error: errorText };
+    }
+
+    const data = await res.json();
+    console.log('Pub/Sub registrado com sucesso:', data);
+    return { success: true, data };
+  } catch (error: any) {
+    console.error('Erro na chamada setPubSubTopic:', error);
+    return { error: error.message };
+  }
+}

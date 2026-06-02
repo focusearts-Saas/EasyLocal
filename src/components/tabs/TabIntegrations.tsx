@@ -19,6 +19,7 @@ export default function TabIntegrations({ session, onSync }: TabIntegrationsProp
 
   const [whatsapp, setWhatsapp] = useState('');
   const [savingWpp, setSavingWpp] = useState(false);
+  const [registeringPubSub, setRegisteringPubSub] = useState(false);
 
   useEffect(() => {
     if (selectedClient?.owner_whatsapp) {
@@ -121,13 +122,50 @@ export default function TabIntegrations({ session, onSync }: TabIntegrationsProp
         .eq('id', selectedClient.id);
 
       if (dbError) throw dbError;
-      alert('Número de WhatsApp salvo com sucesso! Você receberá alertas de novas avaliações.');
+      alert('Número de WhatsApp salvo com sucesso! Lembre-se de ativar o gatilho do Google abaixo.');
       if (onSync) onSync();
     } catch (err: any) {
       console.error(err);
       alert('Erro ao salvar o WhatsApp.');
     } finally {
       setSavingWpp(false);
+    }
+  };
+
+  const handleRegisterPubSub = async () => {
+    if (!selectedClient?.gbp_account_id) {
+      alert('Conta do Google Meu Negócio não identificada neste local.');
+      return;
+    }
+    
+    setRegisteringPubSub(true);
+    try {
+      const sessionData = await supabase.auth.getSession();
+      const userToken = sessionData.data.session?.access_token;
+      
+      const res = await fetch('/api/google/notifications', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userToken}`
+        },
+        body: JSON.stringify({
+          accountId: selectedClient.gbp_account_id,
+          topicName: 'projects/easylocal-498219/topics/easylocal-reviews'
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Falha na requisição ao Google');
+      }
+
+      alert('Tópico registrado no Google com sucesso! As avaliações já vão cair no seu webhook.');
+    } catch (err: any) {
+      console.error(err);
+      alert('Erro ao registrar tópico no Google: ' + err.message);
+    } finally {
+      setRegisteringPubSub(false);
     }
   };
 
@@ -340,6 +378,19 @@ export default function TabIntegrations({ session, onSync }: TabIntegrationsProp
                 className="w-full sm:w-auto bg-[#00ff9d] hover:bg-[#00e08a] text-gray-900 font-bold px-8 py-3 rounded-xl text-xs transition-all shadow-[0_0_15px_rgba(0,255,157,0.2)] disabled:opacity-50"
               >
                 {savingWpp ? 'Salvando...' : 'Salvar Número'}
+              </button>
+            </div>
+            
+            <div className="mt-6 pt-6 border-t border-[#00ff9d]/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-[10px] text-gray-500 max-w-md">
+                Para o sistema funcionar, precisamos avisar o Google que o tópico de Push (Pub/Sub) já está pronto para receber os avisos dessa conta.
+              </div>
+              <button
+                onClick={handleRegisterPubSub}
+                disabled={registeringPubSub}
+                className="w-full sm:w-auto bg-[#161b22] border border-[#00ff9d]/30 text-[#00ff9d] hover:bg-[#00ff9d]/10 font-bold px-6 py-2.5 rounded-xl text-xs transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {registeringPubSub ? 'Ativando...' : '⚡ Ativar Gatilho Google'}
               </button>
             </div>
           </div>

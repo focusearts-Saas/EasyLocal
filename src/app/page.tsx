@@ -18,7 +18,7 @@ export default function Dashboard() {
   const [session, setSession] = useState<any>(null);
   const [loadingSession, setLoadingSession] = useState(true);
   const sessionRef = useRef<any>(null);
-  
+
   useEffect(() => {
     sessionRef.current = session;
   }, [session]);
@@ -58,10 +58,10 @@ export default function Dashboard() {
   const [loadingPerf, setLoadingPerf] = useState(false);
   const [activeTab, setActiveTab] = useState('gbp-dashboard');
   const [appMode, setAppMode] = useState<'seo' | 'gbp'>('gbp');
-  
+
   const [selectedGbp, setSelectedGbp] = useState<any>(null);
   const [gbpData, setGbpData] = useState<any>(null);
-  
+
   const [localReviews, setLocalReviews] = useState<any[]>([]);
   const [loadingLocal, setLoadingLocal] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
@@ -71,26 +71,26 @@ export default function Dashboard() {
   const [imageUrl, setImageUrl] = useState('');
   const [uploadingImage, setUploadingImage] = useState(false);
   const [buttonType, setButtonType] = useState('LEARN_MORE');
-  const [buttonUrl, setButtonUrl] = useState(''); 
+  const [buttonUrl, setButtonUrl] = useState('');
   const [scheduledDate, setScheduledDate] = useState('');
   const [scheduledPosts, setScheduledPosts] = useState<any[]>([]);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
-  
+
   const [auditData, setAuditData] = useState<any>(null);
   const [loadingAudit, setLoadingAudit] = useState(false);
-  
+
   const [trackedKeywords, setTrackedKeywords] = useState<any[]>([]);
   const [newKeyword, setNewKeyword] = useState('');
   const [loadingRank, setLoadingRank] = useState(false);
   const [rankRadius, setRankRadius] = useState('15z');
-  
+
   const [competitorData, setCompetitorData] = useState<{ [key: string]: any }>({});
   const [loadingComp, setLoadingComp] = useState<{ [key: string]: boolean }>({});
 
   const [days, setDays] = useState(28);
   const [customRange, setCustomRange] = useState({ start: '', end: '' });
   const [isCustom, setIsCustom] = useState(false);
-  
+
   const handleGbpDateChange = (start: string, end: string) => {
     setCustomRange({ start, end });
     setIsCustom(true);
@@ -98,7 +98,7 @@ export default function Dashboard() {
       handleSelectGbpProfile(selectedGbp, { start, end });
     }
   };
-  
+
   const [configLocalPath, setConfigLocalPath] = useState('');
   const [configBusinessContext, setConfigBusinessContext] = useState('');
   const [savingConfig, setSavingConfig] = useState(false);
@@ -129,10 +129,10 @@ export default function Dashboard() {
           window.location.href = '/onboarding';
         }
       }
-    } catch (err) { 
-      console.error(err); 
-    } finally { 
-      setLoading(false); 
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -146,7 +146,7 @@ export default function Dashboard() {
     try {
       const res = await fetch('/api/auth/subscription');
       const data = await res.json();
-      
+
       if (data.success) {
         setSubscriptionStatus(data.subscription_status || 'pending');
         if (data.role === 'super_admin') {
@@ -159,7 +159,7 @@ export default function Dashboard() {
           .select('subscription_status')
           .eq('user_id', userId)
           .maybeSingle();
-        
+
         const status = (dbCredits as any)?.subscription_status || 'pending';
         setSubscriptionStatus(status);
 
@@ -187,7 +187,7 @@ export default function Dashboard() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoadingSession(false);
-      
+
       if (session) {
         // Interceptar o fetch global para injetar automaticamente o Bearer Token do usuário logado
         const originalFetch = window.fetch;
@@ -212,10 +212,10 @@ export default function Dashboard() {
       // Evita loops e requisições repetidas se a sessão não mudou de verdade (ex: no focus da janela / refetch de token)
       const currentSession = sessionRef.current;
       const sessionChanged = !currentSession || currentSession.user?.id !== newSession?.user?.id;
-      
+
       setSession(newSession);
       setLoadingSession(false);
-      
+
       if (newSession) {
         const originalFetch = window.fetch;
         window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -225,7 +225,7 @@ export default function Dashboard() {
           }
           return originalFetch(input, { ...init, headers });
         };
-        
+
         // Apenas recarrega a carteira e valida o status se o usuário mudou de fato!
         if (sessionChanged) {
           fetchSites();
@@ -257,21 +257,21 @@ export default function Dashboard() {
       const res = await fetch('/api/performance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-            siteUrl: url, 
-            days: typeof period === 'number' ? period : undefined,
-            startDate: typeof period === 'object' ? period.start : undefined,
-            endDate: typeof period === 'object' ? period.end : undefined
+        body: JSON.stringify({
+          siteUrl: url,
+          days: typeof period === 'number' ? period : undefined,
+          startDate: typeof period === 'object' ? period.start : undefined,
+          endDate: typeof period === 'object' ? period.end : undefined
         }),
       });
       const d = await res.json();
       if (!d.maps && gbpFallback) {
-         d.maps = {
-           title: gbpFallback.title,
-           accountId: gbpFallback.accountId,
-           locationId: gbpFallback.name.replace('locations/', ''),
-           metrics: { totals: { calls: 0, directions: 0, websiteClicks: 0 }, chartData: [] }
-         };
+        d.maps = {
+          title: gbpFallback.title,
+          accountId: gbpFallback.accountId,
+          locationId: gbpFallback.name.replace('locations/', ''),
+          metrics: { totals: { calls: 0, directions: 0, websiteClicks: 0 }, chartData: [] }
+        };
       }
       setData(d);
       if (d.maps?.accountId && d.maps?.locationId) {
@@ -293,7 +293,7 @@ export default function Dashboard() {
       });
       const data = await res.json();
       if (!data.error) setLocalReviews(data);
-    } catch(e) { console.error(e); } finally { setLoadingLocal(false); }
+    } catch (e) { console.error(e); } finally { setLoadingLocal(false); }
   };
 
   const fetchScheduledPosts = async (locationId: string) => {
@@ -324,7 +324,7 @@ export default function Dashboard() {
           } : null);
         }
       }
-    } catch(e) { console.error(e); } finally { setLoadingAudit(false); }
+    } catch (e) { console.error(e); } finally { setLoadingAudit(false); }
   };
 
   const fetchRankData = async (locationId: string) => {
@@ -332,9 +332,9 @@ export default function Dashboard() {
       const res = await fetch(`/api/rank?locationId=${locationId}`);
       const data = await res.json();
       if (!data.error) setTrackedKeywords(data);
-    } catch(e) { console.error(e); }
+    } catch (e) { console.error(e); }
   };
-  
+
 
 
   const handleAddKeyword = async () => {
@@ -358,8 +358,8 @@ export default function Dashboard() {
         })
       });
       const resData = await res.json();
-      if (res.ok) { 
-        setNewKeyword(''); 
+      if (res.ok) {
+        setNewKeyword('');
         fetchRankData(mapsData.locationId);
         // Dispara automaticamente a primeira busca de posicao
         if (resData.keywordId) {
@@ -368,11 +368,11 @@ export default function Dashboard() {
       } else {
         alert(resData.error || 'Falha ao monitorar palavra-chave.');
       }
-    } catch(e) { 
-      console.error(e); 
+    } catch (e) {
+      console.error(e);
       alert('Erro de conexao ao salvar palavra-chave.');
-    } finally { 
-      setLoadingRank(false); 
+    } finally {
+      setLoadingRank(false);
     }
   };
 
@@ -423,7 +423,7 @@ export default function Dashboard() {
       } else {
         alert(resData.error || 'Erro ao atualizar posicao.');
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     } finally {
       setLoadingRank(false);
@@ -453,7 +453,7 @@ export default function Dashboard() {
       });
       const resData = await res.json();
       if (resData.competitors) setCompetitorData(prev => ({ ...prev, [keyword]: { list: resData.competitors, ourPosition: resData.ourPosition ?? null } }));
-    } catch(e) { console.error(e); } finally { setLoadingComp(prev => ({ ...prev, [keyword]: false })); }
+    } catch (e) { console.error(e); } finally { setLoadingComp(prev => ({ ...prev, [keyword]: false })); }
   };
 
   const handleSaveSettings = async () => {
@@ -510,71 +510,71 @@ export default function Dashboard() {
     if (!selectedClient) return;
     setSavingBranded(true);
     try {
-        const res = await fetch('/api/sites', {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                id: selectedClient.id,
-                design_context: { ...selectedClient.design_context, branded_keywords: configBranded },
-                projectFolder: configProjectFolder,
-                stitchPrompt: configStitchPrompt
-            })
-        });
-        if (res.ok) {
-          alert('Configurações de Design (Stitch) atualizadas!');
-          setSites(prev => prev.map(s => s.id === selectedClient.id ? { 
-            ...s, 
-            designContext: { ...s.designContext, branded_keywords: configBranded },
-            projectFolder: configProjectFolder,
-            stitchPrompt: configStitchPrompt
-          } : s));
-        }
-    } catch(e) { console.error(e); } finally { setSavingBranded(false); }
+      const res = await fetch('/api/sites', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: selectedClient.id,
+          design_context: { ...selectedClient.design_context, branded_keywords: configBranded },
+          projectFolder: configProjectFolder,
+          stitchPrompt: configStitchPrompt
+        })
+      });
+      if (res.ok) {
+        alert('Configurações de Design (Stitch) atualizadas!');
+        setSites(prev => prev.map(s => s.id === selectedClient.id ? {
+          ...s,
+          designContext: { ...s.designContext, branded_keywords: configBranded },
+          projectFolder: configProjectFolder,
+          stitchPrompt: configStitchPrompt
+        } : s));
+      }
+    } catch (e) { console.error(e); } finally { setSavingBranded(false); }
   };
 
   const handleSyncDesign = async () => {
     if (!selectedClient || !configLocalPath) return;
     setSyncingDesign(true);
     try {
-        const res = await fetch('/api/sites/sync-design', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ clientId: selectedClient.id, localPath: configLocalPath })
-        });
-        const result = await res.json();
-        if (result.success) {
-          alert('Design sincronizado e Manual da Marca gerado!');
-          if (result.stitchPrompt) setConfigStitchPrompt(result.stitchPrompt);
-          const folderName = configLocalPath.split(/[\\/]/).pop() || '';
-          setConfigProjectFolder(folderName);
-          
-          setSites(prev => prev.map(s => s.id === selectedClient.id ? { 
-            ...s, 
-            stitchPrompt: result.stitchPrompt,
-            projectFolder: folderName,
-            localPath: configLocalPath,
-            designContext: {
-              ...s.designContext,
-              layout: "Sincronizado",
-              designTokens: "Sincronizado",
-              homePage: "Sincronizado"
-            }
-          } : s));
-          setSelectedClient((prev: any) => prev ? {
-            ...prev,
-            stitchPrompt: result.stitchPrompt,
-            projectFolder: folderName,
-            localPath: configLocalPath,
-            designContext: {
-              ...prev.designContext,
-              layout: "Sincronizado",
-              designTokens: "Sincronizado",
-              homePage: "Sincronizado"
-            }
-          } : null);
-        } else {
-          alert('Erro ao sincronizar: ' + result.error);
-        }
+      const res = await fetch('/api/sites/sync-design', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientId: selectedClient.id, localPath: configLocalPath })
+      });
+      const result = await res.json();
+      if (result.success) {
+        alert('Design sincronizado e Manual da Marca gerado!');
+        if (result.stitchPrompt) setConfigStitchPrompt(result.stitchPrompt);
+        const folderName = configLocalPath.split(/[\\/]/).pop() || '';
+        setConfigProjectFolder(folderName);
+
+        setSites(prev => prev.map(s => s.id === selectedClient.id ? {
+          ...s,
+          stitchPrompt: result.stitchPrompt,
+          projectFolder: folderName,
+          localPath: configLocalPath,
+          designContext: {
+            ...s.designContext,
+            layout: "Sincronizado",
+            designTokens: "Sincronizado",
+            homePage: "Sincronizado"
+          }
+        } : s));
+        setSelectedClient((prev: any) => prev ? {
+          ...prev,
+          stitchPrompt: result.stitchPrompt,
+          projectFolder: folderName,
+          localPath: configLocalPath,
+          designContext: {
+            ...prev.designContext,
+            layout: "Sincronizado",
+            designTokens: "Sincronizado",
+            homePage: "Sincronizado"
+          }
+        } : null);
+      } else {
+        alert('Erro ao sincronizar: ' + result.error);
+      }
     } catch (e) { console.error(e); } finally { setSyncingDesign(false); }
   };
 
@@ -582,39 +582,39 @@ export default function Dashboard() {
     if (!selectedClient || !manualDesignCode) return;
     setSyncingDesign(true);
     try {
-        const res = await fetch('/api/sites/sync-design', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              clientId: selectedClient.id, 
-              manualCode: manualDesignCode 
-            })
-        });
-        const result = await res.json();
-        if (result.success) {
-          alert('Design Manual Processado!');
-          if (result.stitchPrompt) setConfigStitchPrompt(result.stitchPrompt);
-          setManualDesignCode('');
-          
-          setSites(prev => prev.map(s => s.id === selectedClient.id ? { 
-            ...s, 
-            stitchPrompt: result.stitchPrompt,
-            designContext: {
-              ...s.designContext,
-              designTokens: manualDesignCode
-            }
-          } : s));
-          setSelectedClient((prev: any) => prev ? {
-            ...prev,
-            stitchPrompt: result.stitchPrompt,
-            designContext: {
-              ...prev.designContext,
-              designTokens: manualDesignCode
-            }
-          } : null);
-        } else {
-          alert('Erro ao processar: ' + result.error);
-        }
+      const res = await fetch('/api/sites/sync-design', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientId: selectedClient.id,
+          manualCode: manualDesignCode
+        })
+      });
+      const result = await res.json();
+      if (result.success) {
+        alert('Design Manual Processado!');
+        if (result.stitchPrompt) setConfigStitchPrompt(result.stitchPrompt);
+        setManualDesignCode('');
+
+        setSites(prev => prev.map(s => s.id === selectedClient.id ? {
+          ...s,
+          stitchPrompt: result.stitchPrompt,
+          designContext: {
+            ...s.designContext,
+            designTokens: manualDesignCode
+          }
+        } : s));
+        setSelectedClient((prev: any) => prev ? {
+          ...prev,
+          stitchPrompt: result.stitchPrompt,
+          designContext: {
+            ...prev.designContext,
+            designTokens: manualDesignCode
+          }
+        } : null);
+      } else {
+        alert('Erro ao processar: ' + result.error);
+      }
     } catch (e) { console.error(e); } finally { setSyncingDesign(false); }
   };
 
@@ -627,7 +627,7 @@ export default function Dashboard() {
     setConfigProjectFolder(client.projectFolder || '');
     setConfigStitchPrompt(client.stitchPrompt || '');
     setData(null);
-    
+
     // Limpar campos de postagem ao trocar de cliente
     setPostText('');
     setImageUrl('');
@@ -648,7 +648,7 @@ export default function Dashboard() {
 
   const handleSelectGbpProfile = async (profile: any, range?: { start: string, end: string }) => {
     if (!profile) return;
-    
+
     setSelectedGbp(profile);
     setLoadingPerf(true);
 
@@ -669,18 +669,18 @@ export default function Dashboard() {
       const res = await fetch('/api/maps/performance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          locationName: fullLocationName, 
+        body: JSON.stringify({
+          locationName: fullLocationName,
           days: range ? undefined : days,
           startDate: range?.start,
           endDate: range?.end
         })
       });
-      
+
       const perfData = await res.json();
-      
-      const safeMetrics = (perfData && !perfData.error) 
-        ? perfData 
+
+      const safeMetrics = (perfData && !perfData.error)
+        ? perfData
         : { totals: { calls: 0, directions: 0, websiteClicks: 0 }, chartData: [] };
 
       const mapsData = {
@@ -690,20 +690,20 @@ export default function Dashboard() {
         metrics: safeMetrics.totals,
         chartData: safeMetrics.chartData
       };
-      
+
       setGbpData(mapsData);
-      
+
       if (accountId && locationId) {
         fetchLocalProfile(accountId, locationId);
         fetchAudit(accountId, locationId);
       }
       fetchScheduledPosts(locationId);
       fetchRankData(locationId);
-      
-    } catch (err) { 
-      console.error('Erro ao selecionar perfil GBP:', err); 
-    } finally { 
-      setLoadingPerf(false); 
+
+    } catch (err) {
+      console.error('Erro ao selecionar perfil GBP:', err);
+    } finally {
+      setLoadingPerf(false);
     }
   };
 
@@ -727,11 +727,11 @@ export default function Dashboard() {
       } else {
         alert('Erro ao gerar resposta: ' + (result.error || 'A IA não retornou texto.'));
       }
-    } catch (e) { 
-      console.error(e); 
+    } catch (e) {
+      console.error(e);
       alert('Falha na comunicação com a API de IA.');
-    } finally { 
-      setGeneratingAI(prev => ({ ...prev, [review.name]: false })); 
+    } finally {
+      setGeneratingAI(prev => ({ ...prev, [review.name]: false }));
     }
   };
 
@@ -749,7 +749,7 @@ export default function Dashboard() {
         setReplyText({ ...replyText, [reviewName]: '' });
         if (gbpData) fetchLocalProfile(gbpData.accountId, gbpData.locationId);
       }
-    } catch(e) { console.error(e); }
+    } catch (e) { console.error(e); }
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -768,11 +768,11 @@ export default function Dashboard() {
 
   const handleButtonTypeChange = (val: string) => {
     setButtonType(val);
-    
+
     const rawName = gbpData?.title || selectedClient?.name;
     if (val === 'LEARN_MORE') {
       let wpp = '';
-      
+
       // 1. Tentar obter o telefone de forma totalmente dinâmica do auditData (Google Meu Negócio real)
       const phoneItem = auditData?.checklist?.find((item: any) => item.id === 'phone');
       if (phoneItem?.passed && phoneItem.value) {
@@ -782,7 +782,7 @@ export default function Dashboard() {
           console.log('📱 WhatsApp gerado dinamicamente via Google:', wpp);
         }
       }
-      
+
       // 2. Fallback para demonstrações estáticas caso o auditData não tenha telefone ou esteja carregando
       if (!wpp && rawName) {
         const clientName = rawName.toLowerCase();
@@ -792,7 +792,7 @@ export default function Dashboard() {
         else if (clientName.includes('simone')) wpp = 'https://wa.me/5511992299294';
         else if (clientName.includes('soft english')) wpp = 'https://wa.me/5511958694687';
       }
-      
+
       if (wpp) {
         setButtonUrl(wpp);
       }
@@ -832,7 +832,7 @@ export default function Dashboard() {
         const scheduledTime = new Date(scheduledDate);
         const now = new Date();
         const minTime = Date.now() - 5 * 60 * 1000; // 5 min tolerance
-        
+
         if (scheduledTime.getMonth() !== now.getMonth() || scheduledTime.getFullYear() !== now.getFullYear()) {
           alert('🚫 Limite Excedido: Você só pode agendar postagens para o mês vigente atual.');
           return;
@@ -882,7 +882,7 @@ export default function Dashboard() {
       }
       setPostText(''); setImageUrl(''); setScheduledDate(''); setButtonType('NONE'); setButtonUrl('');
       setEditingPostId(null);
-    } catch(e) { console.error(e); }
+    } catch (e) { console.error(e); }
   };
 
   const handleEditScheduledPost = (post: any) => {
@@ -911,7 +911,7 @@ export default function Dashboard() {
         setEditingPostId(null);
       }
       alert('Agendamento cancelado!');
-    } catch(e) {
+    } catch (e) {
       console.error(e);
       alert('Erro ao cancelar agendamento.');
     }
@@ -919,7 +919,7 @@ export default function Dashboard() {
 
   const getStrategicInsights = () => {
     if (!data?.keywords) return [];
-    return data.keywords.filter((k:any) => k.position > 3 && k.position <= 12).slice(0, 3).map((k:any) => ({
+    return data.keywords.filter((k: any) => k.position > 3 && k.position <= 12).slice(0, 3).map((k: any) => ({
       type: 'gold',
       title: '🚀 Oportunidade de Ouro',
       desc: `"${k.keys[0]}" na pos ${k.position.toFixed(1)}. Salte para o Top 3!`
@@ -947,24 +947,24 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#f4f6f9] dark:bg-[#06090e] text-[#1f2328] dark:text-[#f0f6fc] flex flex-col lg:flex-row font-sans transition-colors duration-200">
-      
+
       <div className="lg:hidden flex items-center justify-between p-4 border-b border-gray-200 dark:border-[#00ff9d]/10 bg-white dark:bg-[#080b10] sticky top-0 z-50 print:hidden transition-colors duration-200">
-          <div className="flex items-center gap-2">
-            <svg className="w-7 h-7 text-[#00ff9d] filter drop-shadow-[0_0_6px_rgba(0,255,157,0.5)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="mobLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#00ff9d" />
-                  <stop offset="100%" stopColor="#05c475" />
-                </linearGradient>
-              </defs>
-              <path d="M50 15 L85 75 A4 4 0 0 1 81.5 81 L18.5 81 A4 4 0 0 1 15 75 Z" stroke="url(#mobLogoGrad)" strokeWidth="11" strokeLinejoin="round" strokeLinecap="round" />
-              <path d="M50 32 L70 67 L30 67 Z" fill="url(#mobLogoGrad)" fillOpacity="0.18" />
-            </svg>
-            <span className="text-base font-black tracking-tighter text-[#1f2328] dark:text-white">Easy<span className="text-[#00ff9d]">Local</span></span>
-          </div>
-          <button onClick={() => setShowMobileMenu(!showMobileMenu)} className="p-2 text-gray-400">
-              {showMobileMenu ? '✕' : '☰'}
-          </button>
+        <div className="flex items-center gap-2">
+          <svg className="w-7 h-7 text-[#00ff9d] filter drop-shadow-[0_0_6px_rgba(0,255,157,0.5)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="mobLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#00ff9d" />
+                <stop offset="100%" stopColor="#05c475" />
+              </linearGradient>
+            </defs>
+            <path d="M50 15 L85 75 A4 4 0 0 1 81.5 81 L18.5 81 A4 4 0 0 1 15 75 Z" stroke="url(#mobLogoGrad)" strokeWidth="11" strokeLinejoin="round" strokeLinecap="round" />
+            <path d="M50 32 L70 67 L30 67 Z" fill="url(#mobLogoGrad)" fillOpacity="0.18" />
+          </svg>
+          <span className="text-base font-black tracking-tighter text-[#1f2328] dark:text-white">Easy<span className="text-[#00ff9d]">Local</span></span>
+        </div>
+        <button onClick={() => setShowMobileMenu(!showMobileMenu)} className="p-2 text-gray-400">
+          {showMobileMenu ? '✕' : '☰'}
+        </button>
       </div>
 
       <aside className={`${showMobileMenu ? 'flex' : (isSidebarCollapsed ? 'hidden' : 'hidden lg:flex')} fixed lg:static inset-0 lg:inset-auto z-40 w-full lg:w-[270px] bg-white dark:bg-[#080b10] border-r border-gray-200 dark:border-[#00ff9d]/10 flex-col shrink-0 h-screen transition-all duration-300 print:hidden transition-colors duration-200`}>
@@ -1017,11 +1017,10 @@ export default function Dashboard() {
               <div className="flex bg-gray-100 dark:bg-[#0d1117] p-1 rounded-xl border border-gray-200 dark:border-[#00ff9d]/10">
                 <button
                   onClick={() => { if (theme !== 'light') toggleTheme(); }}
-                  className={`flex-1 flex items-center justify-center gap-2 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
-                    theme === 'light' 
-                      ? 'bg-white text-gray-900 shadow-sm border border-gray-200/50' 
+                  className={`flex-1 flex items-center justify-center gap-2 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${theme === 'light'
+                      ? 'bg-white text-gray-900 shadow-sm border border-gray-200/50'
                       : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
-                  }`}
+                    }`}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
@@ -1030,11 +1029,10 @@ export default function Dashboard() {
                 </button>
                 <button
                   onClick={() => { if (theme !== 'dark') toggleTheme(); }}
-                  className={`flex-1 flex items-center justify-center gap-2 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
-                    theme === 'dark' 
-                      ? 'bg-[#080b10] text-[#00ff9d] border border-[#00ff9d]/20 shadow-[0_0_10px_rgba(0,255,157,0.1)]' 
+                  className={`flex-1 flex items-center justify-center gap-2 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${theme === 'dark'
+                      ? 'bg-[#080b10] text-[#00ff9d] border border-[#00ff9d]/20 shadow-[0_0_10px_rgba(0,255,157,0.1)]'
                       : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
-                  }`}
+                    }`}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
@@ -1083,10 +1081,10 @@ export default function Dashboard() {
               {appMode === 'seo' ? (selectedClient?.name || 'Dashboard') : (selectedGbp?.name || 'Dashboard')}
             </span>
           </div>
-          
+
           <div className="flex items-center gap-4">
             {appMode === 'gbp' && selectedGbp && (
-              <MonthRangePicker 
+              <MonthRangePicker
                 onRangeSelect={handleGbpDateChange}
                 initialStart={customRange.start}
                 initialEnd={customRange.end}
