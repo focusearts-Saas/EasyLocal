@@ -10,7 +10,7 @@ interface TabIntegrationsProps {
   selectedClient?: any;
 }
 
-export default function TabIntegrations({ session, onSync }: TabIntegrationsProps) {
+export default function TabIntegrations({ session, onSync, selectedClient }: TabIntegrationsProps) {
   const [integration, setIntegration] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
