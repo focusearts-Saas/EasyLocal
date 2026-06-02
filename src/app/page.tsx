@@ -10,7 +10,6 @@ import TabGBPReviews from '@/components/tabs/TabGBPReviews';
 import TabGBPPosts from '@/components/tabs/TabGBPPosts';
 import TabGBPEvolution from '@/components/tabs/TabGBPEvolution';
 import TabGBPCards from '@/components/tabs/TabGBPCards';
-import TabClientConfig from '@/components/tabs/TabClientConfig';
 import TabIntegrations from '@/components/tabs/TabIntegrations';
 import MonthRangePicker from '@/components/MonthRangePicker';
 import SubscriptionGate from '@/components/SubscriptionGate';
@@ -1007,7 +1006,6 @@ export default function Dashboard() {
               <li><button onClick={() => { setActiveTab('gbp-cards'); setShowMobileMenu(false); }} className={`w-full text-left px-3 py-2 rounded-md transition-all ${activeTab === 'gbp-cards' ? 'bg-[#00ff9d]/10 text-[#00c87b] dark:text-[#00ff9d] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}>🎴 Cards de Avaliação</button></li>
               <li><button onClick={() => { setActiveTab('gbp-evolution'); setShowMobileMenu(false); }} className={`w-full text-left px-3 py-2 rounded-md transition-all ${activeTab === 'gbp-evolution' ? 'bg-[#00ff9d]/10 text-[#00c87b] dark:text-[#00ff9d] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}>📈 Evolução da Análise</button></li>
               <li><button onClick={() => { setActiveTab('integrations'); setShowMobileMenu(false); }} className={`w-full text-left px-3 py-2 rounded-md transition-all ${activeTab === 'integrations' ? 'bg-[#00ff9d]/10 text-[#00c87b] dark:text-[#00ff9d] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}>🔌 Integrações</button></li>
-              <li><button onClick={() => { setActiveTab('client-config'); setShowMobileMenu(false); }} className={`w-full text-left px-3 py-2 rounded-md transition-all ${activeTab === 'client-config' ? 'bg-[#00ff9d]/10 text-[#00c87b] dark:text-[#00ff9d] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}>⚙️ Configurações do Local</button></li>
             </ul>
           )}
 
@@ -1167,39 +1165,6 @@ export default function Dashboard() {
               {activeTab === 'gbp-cards' && <TabGBPCards gbpData={gbpData} />}
               {activeTab === 'gbp-evolution' && <TabGBPEvolution gbpData={gbpData} clientId={selectedClient?.id} />}
               {activeTab === 'integrations' && <TabIntegrations session={session} onSync={fetchSites} />}
-              {activeTab === 'client-config' && (
-                <TabClientConfig
-                  configLocalPath={configLocalPath}
-                  configBusinessContext={configBusinessContext}
-                  configBranded={configBranded}
-                  configProjectFolder={configProjectFolder}
-                  configStitchPrompt={configStitchPrompt}
-                  savingConfig={savingConfig}
-                  savingBranded={savingBranded}
-                  syncingDesign={syncingDesign}
-                  knowledgeBase={knowledgeBase}
-                  loadingKB={loadingKB}
-                  savingKB={savingKB}
-                  kbTitle={kbTitle}
-                  kbContent={kbContent}
-                  selectedClient={selectedClient}
-                  setConfigLocalPath={setConfigLocalPath}
-                  setConfigBusinessContext={setConfigBusinessContext}
-                  setConfigBranded={setConfigBranded}
-                  setConfigProjectFolder={setConfigProjectFolder}
-                  setConfigStitchPrompt={setConfigStitchPrompt}
-                  setKbTitle={setKbTitle}
-                  setKbContent={setKbContent}
-                  handleSaveSettings={handleSaveSettings}
-                  handleSaveBranded={handleSaveBranded}
-                  handleSyncDesign={handleSyncDesign}
-                  handleAddKnowledge={handleAddKnowledge}
-                  handleDeleteKnowledge={handleDeleteKnowledge}
-                  manualDesignCode={manualDesignCode}
-                  setManualDesignCode={setManualDesignCode}
-                  handleManualSync={handleManualSync}
-                />
-              )}
             </div>
           )}
 
@@ -1227,12 +1192,12 @@ export default function Dashboard() {
               <div className="mt-6 flex justify-center">
                 <button
                   onClick={() => {
-                    setActiveTab('client-config');
+                    setActiveTab('integrations');
                     setAppMode('gbp');
                   }}
                   className="bg-[#00ff9d] hover:bg-[#02e08a] text-black font-black py-2.5 px-6 rounded-xl text-xs uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,255,157,0.2)]"
                 >
-                  Configurar Cliente
+                  Conectar Integrações
                 </button>
               </div>
             </div>
