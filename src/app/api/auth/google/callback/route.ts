@@ -94,6 +94,6 @@ export async function GET(req: Request) {
     return NextResponse.redirect(`${new URL(req.url).origin}/onboarding?google_connected=true`);
   } catch (err: any) {
     console.error('Erro crítico no callback do Google OAuth2:', err);
-    return NextResponse.redirect(`${new URL(req.url).origin}/onboarding?google_connected=false&error=callback_failed`);
+    return NextResponse.redirect(`${new URL(req.url).origin}/onboarding?google_connected=false&error=${encodeURIComponent(err.message || 'callback_failed')}`);
   }
 }
