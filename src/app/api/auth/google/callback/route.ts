@@ -63,30 +63,10 @@ export async function GET(req: Request) {
       updateData.refresh_token = tokens.refresh_token;
     }
 
-    // 1. Verificar se a integração para esse usuário já existe no banco
-    const { data: existingIntegration, error: checkError } = await adminSupabase
+    // Usar upsert para evitar erro de concorrência ou chaves duplicadas
+    const { error: dbError } = await adminSupabase
       .from('google_integrations')
-      .select('user_id')
-      .eq('user_id', state)
-      .maybeSingle();
-
-    if (checkError) throw checkError;
-
-    let dbError;
-    if (existingIntegration) {
-      // Atualizar integração existente
-      const { error: updateError } = await adminSupabase
-        .from('google_integrations')
-        .update(updateData)
-        .eq('user_id', state);
-      dbError = updateError;
-    } else {
-      // Inserir nova integração
-      const { error: insertError } = await adminSupabase
-        .from('google_integrations')
-        .insert([updateData]);
-      dbError = insertError;
-    }
+      .upsert(updateData, { onConflict: 'user_id' });
 
     if (dbError) throw dbError;
 
