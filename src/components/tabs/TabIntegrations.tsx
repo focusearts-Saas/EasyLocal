@@ -133,7 +133,8 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
   };
 
   const handleRegisterPubSub = async () => {
-    if (!selectedClient?.gbp_account_id) {
+    const accountId = selectedClient?.gbpData?.accountId;
+    if (!accountId) {
       alert('Conta do Google Meu Negócio não identificada neste local.');
       return;
     }
@@ -150,7 +151,7 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
           'Authorization': `Bearer ${userToken}`
         },
         body: JSON.stringify({
-          accountId: selectedClient.gbp_account_id,
+          accountId: accountId,
           topicName: 'projects/easylocal-498219/topics/easylocal-reviews'
         })
       });
