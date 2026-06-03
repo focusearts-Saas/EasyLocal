@@ -45,18 +45,6 @@ export default function LoginPage() {
 
         if (error) throw error;
 
-        // Se o usuário foi cadastrado, inicializamos os créditos grátis dele na tabela user_credits
-        if (data.user) {
-          // Criar registro de cota gratuita no user_credits
-          await supabase.from('user_credits').insert([
-            {
-              user_id: data.user.id,
-              monthly_allowance: 150,
-              purchased_credits: 0,
-            }
-          ]).select();
-        }
-
         setMessage({ 
           text: 'Cadastro efetuado! Verifique seu e-mail para confirmação (ou faça login diretamente).', 
           type: 'success' 

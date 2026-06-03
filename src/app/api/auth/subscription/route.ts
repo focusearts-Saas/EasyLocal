@@ -38,19 +38,54 @@ export async function GET(req: Request) {
       process.env.SUPABASE_SERVICE_ROLE_KEY || ''
     );
 
-    // Buscar status de assinatura e créditos
-    const { data: creditsData } = await adminSupabase
+    // Buscar status de assinatura e créditos (com fallback resiliente se não existir no banco)
+    let creditsData = null;
+    const { data: existingCredits, error: creditsError } = await adminSupabase
       .from('user_credits')
       .select('subscription_status, seo_allowed')
       .eq('user_id', user.id)
       .maybeSingle();
 
-    // Buscar perfil/role
-    const { data: roleData } = await adminSupabase
+    if (!existingCredits && !creditsError) {
+      const { data: newCredits, error: insertError } = await adminSupabase
+        .from('user_credits')
+        .insert([{
+          user_id: user.id,
+          monthly_allowance: 150,
+          purchased_credits: 0,
+          subscription_status: 'pending',
+          seo_allowed: false
+        }])
+        .select('subscription_status, seo_allowed')
+        .maybeSingle();
+      
+      creditsData = newCredits || { subscription_status: 'pending', seo_allowed: false };
+    } else {
+      creditsData = existingCredits;
+    }
+
+    // Buscar perfil/role (com fallback resiliente se não existir no banco)
+    let roleData = null;
+    const { data: existingRole, error: roleError } = await adminSupabase
       .from('user_roles')
       .select('role')
       .eq('user_id', user.id)
       .maybeSingle();
+
+    if (!existingRole && !roleError) {
+      const { data: newRole, error: insertRoleError } = await adminSupabase
+        .from('user_roles')
+        .insert([{
+          user_id: user.id,
+          role: 'user'
+        }])
+        .select('role')
+        .maybeSingle();
+      
+      roleData = newRole || { role: 'user' };
+    } else {
+      roleData = existingRole;
+    }
 
     return NextResponse.json({
       success: true,

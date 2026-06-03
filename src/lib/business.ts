@@ -323,15 +323,16 @@ export async function getLocationDetails(locationId: string, tokenSupabase?: str
 export async function setPubSubTopic(accountId: string, topicName: string, tokenSupabase?: string) {
   try {
     const accessToken = await getAccessToken(tokenSupabase);
-    const url = `https://mybusinessnotifications.googleapis.com/v1/accounts/${accountId}/notificationSetting`;
+    const url = `https://mybusinessnotifications.googleapis.com/v1/accounts/${accountId}/notificationSetting?updateMask=pubsubTopic,notificationTypes`;
 
     const body = {
+      name: `accounts/${accountId}/notificationSetting`,
       pubsubTopic: topicName,
       notificationTypes: ["NEW_REVIEW", "UPDATED_REVIEW"]
     };
 
     const res = await fetch(url, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
