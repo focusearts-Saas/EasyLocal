@@ -74,7 +74,7 @@ export async function POST(req: Request) {
       console.warn('⚠️ N8N_WEBHOOK_URL não está configurada no servidor Vercel!');
     }
 
-    return NextResponse.json({ success: true, triggered, hasWpp: !!client.owner_whatsapp });
+    return NextResponse.json({ success: true, triggered, hasWpp: !!client.owner_whatsapp, webhookUrl: n8nWebhookUrl });
   } catch (error: any) {
     console.error('Erro no webhook Pub/Sub:', error);
     // Retornamos 200 mesmo no erro genérico para evitar retentativas infinitas do Pub/Sub se for erro de parse
