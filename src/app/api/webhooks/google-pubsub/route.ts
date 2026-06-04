@@ -54,8 +54,9 @@ export async function POST(req: Request) {
     // Se temos o webhook do n8n configurado nas variáveis de ambiente, dispara pra lá
     const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL;
 
+    let triggered = false;
     if (n8nWebhookUrl) {
-      await fetch(n8nWebhookUrl, {
+      const n8nRes = await fetch(n8nWebhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -67,13 +68,16 @@ export async function POST(req: Request) {
           create_time: reviewData.createTime
         })
       });
-      console.log('✅ Webhook disparado para n8n com sucesso!');
+      triggered = true;
+      console.log('✅ Webhook disparado para n8n com sucesso! Status:', n8nRes.status);
+    } else {
+      console.warn('⚠️ N8N_WEBHOOK_URL não está configurada no servidor Vercel!');
     }
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
+    return NextResponse.json({ success: true, triggered, hasWpp: !!client.owner_whatsapp });
+  } catch (error: any) {
     console.error('Erro no webhook Pub/Sub:', error);
     // Retornamos 200 mesmo no erro genérico para evitar retentativas infinitas do Pub/Sub se for erro de parse
-    return NextResponse.json({ success: true, error: 'Erro interno capturado' });
+    return NextResponse.json({ success: true, error: error.message || 'Erro interno capturado' });
   }
 }
