@@ -81,3 +81,75 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, error: error.message || 'Erro interno capturado' });
   }
 }
+
+// Método GET para disparar testes rápidos diretamente pelo navegador
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const locationId = searchParams.get('locationId') || '4352768185514565207'; // Elivan por padrão
+    const comment = searchParams.get('comment') || 'Excelente atendimento, recomendo muito!';
+    const reviewerName = searchParams.get('reviewer') || 'Cliente de Teste';
+    const ratingVal = parseInt(searchParams.get('rating') || '5', 10);
+
+    console.log('🧪 Executando teste manual do webhook para localização:', locationId);
+
+    // Busca o cliente no banco de dados para pegar o WhatsApp do dono
+    const { data: client, error: clientError } = await supabaseAdmin
+      .from('clients')
+      .select('name, owner_whatsapp')
+      .eq('gbp_location_id', locationId)
+      .maybeSingle();
+
+    if (clientError || !client) {
+      return NextResponse.json({ 
+        success: false, 
+        error: `Cliente com locationId ${locationId} não encontrado no banco de dados.` 
+      }, { status: 404 });
+    }
+
+    if (!client.owner_whatsapp) {
+      return NextResponse.json({ 
+        success: false, 
+        error: `Cliente ${client.name} encontrado, mas não possui WhatsApp cadastrado.` 
+      }, { status: 400 });
+    }
+
+    const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL;
+    let triggered = false;
+    let n8nStatus = 0;
+
+    if (n8nWebhookUrl) {
+      const n8nRes = await fetch(n8nWebhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          business_name: client.name,
+          owner_whatsapp: client.owner_whatsapp,
+          reviewer_name: reviewerName,
+          rating: ratingVal,
+          comment: comment,
+          create_time: new Date().toISOString()
+        })
+      });
+      triggered = true;
+      n8nStatus = n8nRes.status;
+    }
+
+    return NextResponse.json({
+      message: '🧪 Teste disparado com sucesso!',
+      business: client.name,
+      target_whatsapp: client.owner_whatsapp,
+      n8n_triggered: triggered,
+      n8n_webhook_url: n8nWebhookUrl,
+      n8n_status: n8nStatus,
+      payload_sent: {
+        reviewer_name: reviewerName,
+        rating: ratingVal,
+        comment: comment
+      }
+    });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
