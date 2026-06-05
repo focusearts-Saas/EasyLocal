@@ -5,17 +5,17 @@ async function testWebhook() {
         locationName: "locations/4352768185514565207", // Elivan Auto eletrica location ID
         review: {
           reviewer: {
-            displayName: "Gabriel Amorim (Teste)"
+            displayName: "Skedar Music (Teste Real)"
           },
           starRating: "FIVE",
-          comment: "Excelente serviço de auto elétrica! Teste de webhook.",
+          comment: "honesto e preço justo, recomendo",
           createTime: new Date().toISOString()
         }
       })).toString('base64')
     }
   };
 
-  console.log("🚀 Enviando requisição de teste para o Webhook da Vercel...");
+  console.log("🚀 Enviando requisição de teste simulado real para o Webhook da Vercel...");
   try {
     const res = await fetch('https://easy-local-omega.vercel.app/api/webhooks/google-pubsub', {
       method: 'POST',

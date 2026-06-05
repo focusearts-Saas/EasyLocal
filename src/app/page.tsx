@@ -137,11 +137,6 @@ export default function Dashboard() {
   };
 
   const checkUserStatus = async (userId: string, email: string) => {
-    if (email === 'gabrielamorimseo@gmail.com' || email === 'focus.earts@gmail.com') {
-      setIsAdmin(true);
-      setSubscriptionStatus('active');
-      return;
-    }
     setCheckingSubscription(true);
     try {
       const res = await fetch('/api/auth/subscription');
@@ -1046,6 +1041,15 @@ export default function Dashboard() {
               <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider font-bold">Logado como</p>
               <p className="text-xs text-gray-700 dark:text-gray-400 font-semibold truncate mt-0.5">{session?.user?.email || ''}</p>
             </div>
+            {isAdmin && (
+              <a
+                href="/admin"
+                className="w-full text-left px-3 py-2 rounded-md font-bold transition-all text-sky-400/80 hover:text-sky-300 hover:bg-sky-500/10 flex items-center gap-2 text-sm mb-1"
+              >
+                <span>🛡️</span>
+                <span>Painel Admin</span>
+              </a>
+            )}
             <button
               onClick={async () => {
                 await supabase.auth.signOut();
@@ -1055,6 +1059,7 @@ export default function Dashboard() {
               <span>⏻</span>
               <span>Sair da conta</span>
             </button>
+
           </div>
         </div>
       </aside>
