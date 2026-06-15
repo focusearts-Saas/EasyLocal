@@ -34,7 +34,14 @@ async function checkAndPublish() {
         text: post.content,
         imageUrl: post.image_url,
         buttonType: post.button_type,
-        buttonUrl: post.button_url
+        buttonUrl: post.button_url,
+        topicType: post.topic_type,
+        eventTitle: post.event_title,
+        eventStartDate: post.event_start_date,
+        eventEndDate: post.event_end_date,
+        offerCouponCode: post.offer_coupon_code,
+        offerRedeemUrl: post.offer_redeem_url,
+        offerTerms: post.offer_terms
       });
 
       if (success) {

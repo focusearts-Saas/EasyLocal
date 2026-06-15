@@ -76,6 +76,15 @@ export default function Dashboard() {
   const [scheduledPosts, setScheduledPosts] = useState<any[]>([]);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
 
+  // Novos estados para Ofertas e Eventos
+  const [topicType, setTopicType] = useState('STANDARD');
+  const [eventTitle, setEventTitle] = useState('');
+  const [eventStartDate, setEventStartDate] = useState('');
+  const [eventEndDate, setEventEndDate] = useState('');
+  const [offerCouponCode, setOfferCouponCode] = useState('');
+  const [offerRedeemUrl, setOfferRedeemUrl] = useState('');
+  const [offerTerms, setOfferTerms] = useState('');
+
   const [auditData, setAuditData] = useState<any>(null);
   const [loadingAudit, setLoadingAudit] = useState(false);
 
@@ -838,14 +847,29 @@ export default function Dashboard() {
         }
       }
 
+      // Validação de campos obrigatórios para Ofertas e Eventos
+      if (topicType === 'EVENT' || topicType === 'OFFER') {
+        if (!eventTitle || !eventStartDate || !eventEndDate) {
+          alert('⚠️ O título, data de início e data de término são obrigatórios para Eventos e Ofertas.');
+          return;
+        }
+      }
+
       if (editingPostId) {
         await supabase.from('scheduled_posts').update({
           scheduled_for: scheduledDate ? new Date(scheduledDate).toISOString() : new Date().toISOString(),
           content: postText,
           image_url: imageUrl,
-          button_type: buttonType,
-          button_url: buttonUrl,
-          status: 'pending'
+          button_type: topicType === 'OFFER' ? 'NONE' : buttonType,
+          button_url: topicType === 'OFFER' ? '' : buttonUrl,
+          status: 'pending',
+          topic_type: topicType,
+          event_title: (topicType === 'EVENT' || topicType === 'OFFER') ? eventTitle : null,
+          event_start_date: (topicType === 'EVENT' || topicType === 'OFFER') && eventStartDate ? new Date(eventStartDate).toISOString() : null,
+          event_end_date: (topicType === 'EVENT' || topicType === 'OFFER') && eventEndDate ? new Date(eventEndDate).toISOString() : null,
+          offer_coupon_code: topicType === 'OFFER' ? offerCouponCode : null,
+          offer_redeem_url: topicType === 'OFFER' ? offerRedeemUrl : null,
+          offer_terms: topicType === 'OFFER' ? offerTerms : null,
         }).eq('id', editingPostId);
         alert('Agendamento atualizado!');
         setEditingPostId(null);
@@ -855,11 +879,18 @@ export default function Dashboard() {
           scheduled_for: new Date(scheduledDate).toISOString(),
           content: postText,
           image_url: imageUrl,
-          button_type: buttonType,
-          button_url: buttonUrl,
+          button_type: topicType === 'OFFER' ? 'NONE' : buttonType,
+          button_url: topicType === 'OFFER' ? '' : buttonUrl,
           location_id: gbpData.locationId,
           account_id: gbpData.accountId,
-          status: 'pending'
+          status: 'pending',
+          topic_type: topicType,
+          event_title: (topicType === 'EVENT' || topicType === 'OFFER') ? eventTitle : null,
+          event_start_date: (topicType === 'EVENT' || topicType === 'OFFER') && eventStartDate ? new Date(eventStartDate).toISOString() : null,
+          event_end_date: (topicType === 'EVENT' || topicType === 'OFFER') && eventEndDate ? new Date(eventEndDate).toISOString() : null,
+          offer_coupon_code: topicType === 'OFFER' ? offerCouponCode : null,
+          offer_redeem_url: topicType === 'OFFER' ? offerRedeemUrl : null,
+          offer_terms: topicType === 'OFFER' ? offerTerms : null,
         }]);
         alert('Agendado!');
         fetchScheduledPosts(gbpData.locationId);
@@ -870,12 +901,33 @@ export default function Dashboard() {
           body: JSON.stringify({
             accountId: gbpData.accountId,
             locationId: gbpData.locationId,
-            postText, imageUrl, buttonType, buttonUrl
+            postText,
+            imageUrl,
+            buttonType: topicType === 'OFFER' ? 'NONE' : buttonType,
+            buttonUrl: topicType === 'OFFER' ? '' : buttonUrl,
+            topicType,
+            eventTitle: (topicType === 'EVENT' || topicType === 'OFFER') ? eventTitle : null,
+            eventStartDate: (topicType === 'EVENT' || topicType === 'OFFER') && eventStartDate ? new Date(eventStartDate).toISOString() : null,
+            eventEndDate: (topicType === 'EVENT' || topicType === 'OFFER') && eventEndDate ? new Date(eventEndDate).toISOString() : null,
+            couponCode: topicType === 'OFFER' ? offerCouponCode : null,
+            redeemOnlineUrl: topicType === 'OFFER' ? offerRedeemUrl : null,
+            termsConditions: topicType === 'OFFER' ? offerTerms : null,
           })
         });
         alert('Publicado!');
       }
-      setPostText(''); setImageUrl(''); setScheduledDate(''); setButtonType('NONE'); setButtonUrl('');
+      setPostText('');
+      setImageUrl('');
+      setScheduledDate('');
+      setButtonType('NONE');
+      setButtonUrl('');
+      setTopicType('STANDARD');
+      setEventTitle('');
+      setEventStartDate('');
+      setEventEndDate('');
+      setOfferCouponCode('');
+      setOfferRedeemUrl('');
+      setOfferTerms('');
       setEditingPostId(null);
     } catch (e) { console.error(e); }
   };
@@ -893,6 +945,27 @@ export default function Dashboard() {
     } else {
       setScheduledDate('');
     }
+
+    setTopicType(post.topic_type || 'STANDARD');
+    setEventTitle(post.event_title || '');
+    if (post.event_start_date) {
+      const d = new Date(post.event_start_date);
+      const offset = d.getTimezoneOffset() * 60000;
+      setEventStartDate((new Date(d.getTime() - offset)).toISOString().slice(0, 16));
+    } else {
+      setEventStartDate('');
+    }
+    if (post.event_end_date) {
+      const d = new Date(post.event_end_date);
+      const offset = d.getTimezoneOffset() * 60000;
+      setEventEndDate((new Date(d.getTime() - offset)).toISOString().slice(0, 16));
+    } else {
+      setEventEndDate('');
+    }
+    setOfferCouponCode(post.offer_coupon_code || '');
+    setOfferRedeemUrl(post.offer_redeem_url || '');
+    setOfferTerms(post.offer_terms || '');
+
     setEditingPostId(post.id);
   };
 
@@ -903,6 +976,8 @@ export default function Dashboard() {
       setScheduledPosts(prev => prev.filter((p: any) => p.id !== id));
       if (editingPostId === id) {
         setPostText(''); setImageUrl(''); setScheduledDate(''); setButtonType('NONE'); setButtonUrl('');
+        setTopicType('STANDARD'); setEventTitle(''); setEventStartDate(''); setEventEndDate('');
+        setOfferCouponCode(''); setOfferRedeemUrl(''); setOfferTerms('');
         setEditingPostId(null);
       }
       alert('Agendamento cancelado!');
@@ -1145,11 +1220,29 @@ export default function Dashboard() {
                   gbpTitle={gbpData?.title}
                   scheduledPosts={scheduledPosts}
                   editingPostId={editingPostId}
+                  
+                  topicType={topicType}
+                  eventTitle={eventTitle}
+                  eventStartDate={eventStartDate}
+                  eventEndDate={eventEndDate}
+                  offerCouponCode={offerCouponCode}
+                  offerRedeemUrl={offerRedeemUrl}
+                  offerTerms={offerTerms}
+                  
                   setPostText={setPostText}
                   setImageUrl={setImageUrl}
                   setButtonType={handleButtonTypeChange}
                   setButtonUrl={setButtonUrl}
                   setScheduledDate={setScheduledDate}
+                  
+                  setTopicType={setTopicType}
+                  setEventTitle={setEventTitle}
+                  setEventStartDate={setEventStartDate}
+                  setEventEndDate={setEventEndDate}
+                  setOfferCouponCode={setOfferCouponCode}
+                  setOfferRedeemUrl={setOfferRedeemUrl}
+                  setOfferTerms={setOfferTerms}
+                  
                   handleImageUpload={handleImageUpload}
                   handlePost={handlePost}
                   handleGenerateAIPost={handleGenerateAIPost}
@@ -1161,6 +1254,13 @@ export default function Dashboard() {
                     setButtonType('NONE');
                     setButtonUrl('');
                     setScheduledDate('');
+                    setTopicType('STANDARD');
+                    setEventTitle('');
+                    setEventStartDate('');
+                    setEventEndDate('');
+                    setOfferCouponCode('');
+                    setOfferRedeemUrl('');
+                    setOfferTerms('');
                     setEditingPostId(null);
                   }}
                 />

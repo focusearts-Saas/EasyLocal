@@ -241,15 +241,53 @@ export async function replyToReview(reviewName: string, replyText: string, token
   }
 }
 
-export async function createLocalPost(accountId: string, locationId: string, postData: { text: string, imageUrl?: string, buttonType?: string, buttonUrl?: string }, tokenSupabase?: string) {
+function parseGoogleDateTime(dateTimeStr?: string) {
+  if (!dateTimeStr) return null;
+  const d = new Date(dateTimeStr);
+  if (isNaN(d.getTime())) return null;
+  return {
+    date: {
+      year: d.getFullYear(),
+      month: d.getMonth() + 1,
+      day: d.getDate()
+    },
+    time: {
+      hours: d.getHours(),
+      minutes: d.getMinutes(),
+      seconds: 0,
+      nanos: 0
+    }
+  };
+}
+
+export async function createLocalPost(
+  accountId: string, 
+  locationId: string, 
+  postData: { 
+    text: string, 
+    imageUrl?: string, 
+    buttonType?: string, 
+    buttonUrl?: string,
+    topicType?: 'STANDARD' | 'EVENT' | 'OFFER',
+    eventTitle?: string,
+    eventStartDate?: string,
+    eventEndDate?: string,
+    offerCouponCode?: string,
+    offerRedeemUrl?: string,
+    offerTerms?: string
+  }, 
+  tokenSupabase?: string
+) {
   try {
     const accessToken = await getAccessToken(tokenSupabase);
     const url = `https://mybusiness.googleapis.com/v4/accounts/${accountId}/locations/${locationId}/localPosts`;
 
+    const topicType = postData.topicType || 'STANDARD';
+
     const body: any = {
       languageCode: 'pt-BR',
       summary: postData.text,
-      topicType: 'STANDARD'
+      topicType: topicType
     };
 
     // Adicionar Imagem se existir
@@ -262,12 +300,47 @@ export async function createLocalPost(accountId: string, locationId: string, pos
       ];
     }
 
-    // Adicionar Botão se existir
-    if (postData.buttonType && postData.buttonType !== 'NONE') {
+    // Adicionar Botão se existir (Ofertas ignoram CTA padrão no Google)
+    if (topicType !== 'OFFER' && postData.buttonType && postData.buttonType !== 'NONE') {
       body.callToAction = {
         actionType: postData.buttonType,
         url: postData.buttonUrl || ''
       };
+    }
+
+    // Se for EVENTO ou OFERTA, estrutura o objeto de Event
+    if (topicType === 'EVENT' || topicType === 'OFFER') {
+      const startObj = parseGoogleDateTime(postData.eventStartDate);
+      const endObj = parseGoogleDateTime(postData.eventEndDate);
+
+      if (!postData.eventTitle) {
+        throw new Error('Título do evento/oferta é obrigatório.');
+      }
+      if (!startObj || !endObj) {
+        throw new Error('Data de início e término válidas são obrigatórias.');
+      }
+
+      body.event = {
+        title: postData.eventTitle,
+        schedule: {
+          startDate: startObj.date,
+          startTime: startObj.time,
+          endDate: endObj.date,
+          endTime: endObj.time
+        }
+      };
+    }
+
+    // Se for OFERTA, adiciona os detalhes específicos de promoção
+    if (topicType === 'OFFER') {
+      const offerObj: any = {};
+      if (postData.offerCouponCode) offerObj.couponCode = postData.offerCouponCode;
+      if (postData.offerRedeemUrl) offerObj.redeemOnlineUrl = postData.offerRedeemUrl;
+      if (postData.offerTerms) offerObj.termsConditions = postData.offerTerms;
+
+      if (Object.keys(offerObj).length > 0) {
+        body.offer = offerObj;
+      }
     }
 
     const res = await fetch(url, {
