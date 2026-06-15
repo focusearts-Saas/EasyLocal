@@ -11,6 +11,7 @@ import TabGBPPosts from '@/components/tabs/TabGBPPosts';
 import TabGBPEvolution from '@/components/tabs/TabGBPEvolution';
 import TabGBPCards from '@/components/tabs/TabGBPCards';
 import TabIntegrations from '@/components/tabs/TabIntegrations';
+import TabGBPPlaybook from '@/components/tabs/TabGBPPlaybook';
 import MonthRangePicker from '@/components/MonthRangePicker';
 import SubscriptionGate from '@/components/SubscriptionGate';
 
@@ -1075,6 +1076,7 @@ export default function Dashboard() {
               <li><button onClick={() => { setActiveTab('gbp-posts'); setShowMobileMenu(false); }} className={`w-full text-left px-3 py-2 rounded-md transition-all ${activeTab === 'gbp-posts' ? 'bg-[#00ff9d]/10 text-[#00c87b] dark:text-[#00ff9d] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}>📣 Postagens</button></li>
               <li><button onClick={() => { setActiveTab('gbp-cards'); setShowMobileMenu(false); }} className={`w-full text-left px-3 py-2 rounded-md transition-all ${activeTab === 'gbp-cards' ? 'bg-[#00ff9d]/10 text-[#00c87b] dark:text-[#00ff9d] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}>🎴 Cards de Avaliação</button></li>
               <li><button onClick={() => { setActiveTab('gbp-evolution'); setShowMobileMenu(false); }} className={`w-full text-left px-3 py-2 rounded-md transition-all ${activeTab === 'gbp-evolution' ? 'bg-[#00ff9d]/10 text-[#00c87b] dark:text-[#00ff9d] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}>📈 Evolução da Análise</button></li>
+              <li><button onClick={() => { setActiveTab('gbp-playbook'); setShowMobileMenu(false); }} className={`w-full text-left px-3 py-2 rounded-md transition-all ${activeTab === 'gbp-playbook' ? 'bg-[#00ff9d]/10 text-[#00c87b] dark:text-[#00ff9d] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}>📖 Guia de Crescimento</button></li>
               <li><button onClick={() => { setActiveTab('integrations'); setShowMobileMenu(false); }} className={`w-full text-left px-3 py-2 rounded-md transition-all ${activeTab === 'integrations' ? 'bg-[#00ff9d]/10 text-[#00c87b] dark:text-[#00ff9d] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}>🔌 Integrações</button></li>
             </ul>
           )}
@@ -1267,6 +1269,7 @@ export default function Dashboard() {
               )}
               {activeTab === 'gbp-cards' && <TabGBPCards gbpData={gbpData} />}
               {activeTab === 'gbp-evolution' && <TabGBPEvolution gbpData={gbpData} clientId={selectedClient?.id} />}
+              {activeTab === 'gbp-playbook' && <TabGBPPlaybook />}
               {activeTab === 'integrations' && <TabIntegrations session={session} onSync={fetchSites} selectedClient={selectedClient} />}
             </div>
           )}
