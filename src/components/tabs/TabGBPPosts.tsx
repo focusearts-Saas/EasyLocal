@@ -123,7 +123,7 @@ export default function TabGBPPosts({
                   className={`px-5 py-3 rounded-xl text-xs font-bold transition-all border ${
                     topicType === item.type 
                       ? 'bg-[#00ff9d]/10 border-[#00ff9d] text-[#00ff9d] shadow-[0_0_15px_rgba(0,255,157,0.15)]' 
-                      : 'bg-[#161b22] border-gray-800 text-gray-400 hover:text-white hover:border-gray-700'
+                      : 'bg-white dark:bg-[#161b22] border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-gray-400 dark:hover:border-gray-700'
                   }`}
                 >
                   {item.label}
@@ -134,7 +134,7 @@ export default function TabGBPPosts({
 
           {/* Gerador de IA Section (Apenas para posts normais/STANDARD) */}
           {topicType === 'STANDARD' && (
-            <div className="bg-[#11161d] rounded-xl p-6 border border-gray-800 shadow-inner">
+            <div className="bg-gray-50 dark:bg-[#11161d] rounded-xl p-6 border border-gray-200 dark:border-gray-800 shadow-inner">
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 gap-4">
                 <label className="block text-[10px] font-bold text-[#00ff9d] uppercase tracking-widest flex items-center gap-2">
                   <span className="text-sm">✨</span> Gerador de Postagens por IA
@@ -149,7 +149,7 @@ export default function TabGBPPosts({
                       key={topic} 
                       onClick={() => handleGenerateAIPost && handleGenerateAIPost(topic)}
                       disabled={generatingAIPost}
-                      className="px-3 py-1.5 bg-[#161b22] hover:bg-[#00ff9d]/10 border border-gray-800 hover:border-[#00ff9d]/50 text-gray-300 hover:text-[#00ff9d] rounded-full text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-3 py-1.5 bg-white dark:bg-[#161b22] hover:bg-[#00ff9d]/10 border border-gray-200 dark:border-gray-800 hover:border-[#00ff9d]/50 text-gray-600 dark:text-gray-300 hover:text-[#00ff9d] rounded-full text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {topic}
                     </button>
@@ -163,7 +163,7 @@ export default function TabGBPPosts({
                   value={aiPrompt} 
                   onChange={(e) => setAiPrompt(e.target.value)}
                   placeholder="Ou digite uma palavra ou ideia (ex: promoção de feriado)"
-                  className="flex-1 bg-[#161b22] border border-gray-800 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-[#00ff9d] font-medium"
+                  className="flex-1 bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-2 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#00ff9d] font-medium"
                 />
                 <button 
                   onClick={() => handleGenerateAIPost && aiPrompt && handleGenerateAIPost(aiPrompt)}
@@ -189,7 +189,7 @@ export default function TabGBPPosts({
                 value={eventTitle}
                 onChange={e => setEventTitle(e.target.value)}
                 placeholder={topicType === 'EVENT' ? 'Ex: Inauguração da Nova Filial' : 'Ex: 20% de Desconto em Todo o Site'}
-                className="w-full bg-[#161b22] border border-gray-800 rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-[#00ff9d] font-medium"
+                className="w-full bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#00ff9d] font-medium"
               />
               <div className="text-right text-[10px] text-gray-500 font-medium">{eventTitle.length} / 58</div>
             </div>
@@ -204,7 +204,7 @@ export default function TabGBPPosts({
               value={postText} 
               onChange={(e) => setPostText(e.target.value)}
               placeholder={topicType === 'STANDARD' ? "Ex: Estamos abertos no feriado! Venha nos visitar..." : "Ex: Detalhes sobre o evento ou termos gerais da promoção..."}
-              className="w-full h-40 bg-[#161b22] border border-gray-800 rounded-xl p-5 text-white text-sm focus:outline-none focus:border-[#00ff9d] focus:ring-1 focus:ring-[#00ff9d] resize-none font-medium" 
+              className="w-full h-40 bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-xl p-5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#00ff9d] focus:ring-1 focus:ring-[#00ff9d] resize-none font-medium" 
             />
             <div className="text-right text-[11px] text-gray-500 mt-2 font-medium">{postText.length} / 1500</div>
           </div>
@@ -250,7 +250,7 @@ export default function TabGBPPosts({
                     value={offerCouponCode} 
                     onChange={e => setOfferCouponCode(e.target.value)}
                     placeholder="Ex: SAVE20"
-                    className="w-full bg-[#161b22] border border-gray-800 rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-[#00ff9d] font-medium"
+                    className="w-full bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#00ff9d] font-medium"
                   />
                 </div>
                 <div>
@@ -260,7 +260,7 @@ export default function TabGBPPosts({
                     value={offerRedeemUrl} 
                     onChange={e => setOfferRedeemUrl(e.target.value)}
                     placeholder="https://sua-loja.com/desconto"
-                    className="w-full bg-[#161b22] border border-gray-800 rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-[#00ff9d] font-medium"
+                    className="w-full bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#00ff9d] font-medium"
                   />
                 </div>
               </div>
@@ -271,7 +271,7 @@ export default function TabGBPPosts({
                   value={offerTerms} 
                   onChange={e => setOfferTerms(e.target.value)}
                   placeholder="Ex: Válido apenas para novos clientes. Limite de 1 cupom por CPF."
-                  className="w-full h-24 bg-[#161b22] border border-gray-800 rounded-xl p-4 text-white text-sm focus:outline-none focus:border-[#00ff9d] resize-none font-medium"
+                  className="w-full h-24 bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-xl p-4 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#00ff9d] resize-none font-medium"
                 />
               </div>
             </div>
@@ -281,7 +281,7 @@ export default function TabGBPPosts({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">Foto (Opcional)</label>
-              <div className={`border-2 border-dashed ${imageUrl ? 'border-[#00ff9d]' : 'border-gray-800 hover:border-[#00ff9d]/50'} rounded-xl p-6 flex flex-col items-center justify-center text-center relative overflow-hidden h-40 transition-colors bg-[#161b22]`}>
+              <div className={`border-2 border-dashed ${imageUrl ? 'border-[#00ff9d]' : 'border-gray-300 dark:border-gray-800 hover:border-[#00ff9d]/50'} rounded-xl p-6 flex flex-col items-center justify-center text-center relative overflow-hidden h-40 transition-colors bg-gray-50 dark:bg-[#161b22]`}>
                 {imageUrl ? (
                   <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${imageUrl})` }}>
                     <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity backdrop-blur-sm">
@@ -306,7 +306,7 @@ export default function TabGBPPosts({
                   <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">Botão de Ação (CTA)</label>
                   <div className="relative">
                     <select value={buttonType} onChange={e => setButtonType(e.target.value)}
-                      className="w-full bg-[#161b22] border border-gray-800 rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-[#00ff9d] appearance-none cursor-pointer font-medium">
+                      className="w-full bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#00ff9d] appearance-none cursor-pointer font-medium">
                       <option value="NONE">Nenhum botão</option>
                       <option value="LEARN_MORE">🔗 Saiba Mais</option>
                       <option value="BOOK">📅 Reservar</option>
@@ -320,12 +320,12 @@ export default function TabGBPPosts({
                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">URL de Destino</label>
                     <input type="url" value={buttonUrl} onChange={e => setButtonUrl(e.target.value)}
                       placeholder="https://seudominio.com.br"
-                      className="w-full bg-[#161b22] border border-gray-800 rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-[#00ff9d] font-medium" />
+                      className="w-full bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#00ff9d] font-medium" />
                   </div>
                 )}
               </div>
             ) : (
-              <div className="bg-[#11161d] rounded-xl p-5 border border-gray-800 flex items-center justify-center text-center text-xs text-gray-500 font-medium">
+              <div className="bg-gray-50 dark:bg-[#11161d] rounded-xl p-5 border border-gray-200 dark:border-gray-800 flex items-center justify-center text-center text-xs text-gray-500 font-medium">
                 📢 Em postagens de Oferta, o link de resgate preenchido acima será exibido automaticamente como botão principal no Google.
               </div>
             )}
@@ -333,12 +333,12 @@ export default function TabGBPPosts({
         </div>
 
         {/* Rodapé e Programação */}
-        <div className="mt-10 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-6 bg-[#0d1117]/50 -mx-8 lg:-mx-10 -mb-8 lg:-mb-10 p-8 lg:p-10 rounded-b-2xl relative z-10">
+        <div className="mt-10 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-6 bg-gray-50 dark:bg-[#0d1117]/50 -mx-8 lg:-mx-10 -mb-8 lg:-mb-10 p-8 lg:p-10 rounded-b-2xl relative z-10">
           <div className="w-full md:w-auto">
             <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">Agendar Postagem? (Opcional)</label>
             <input type="datetime-local" value={scheduledDate} onChange={e => setScheduledDate(e.target.value)}
               min={getMinDateTime()} max={getMaxDateTime()}
-              className="w-full md:w-64 bg-[#161b22] border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#00ff9d] font-medium cursor-pointer" />
+              className="w-full md:w-64 bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#00ff9d] font-medium cursor-pointer" />
           </div>
           <button 
             onClick={handlePost} 
@@ -348,7 +348,7 @@ export default function TabGBPPosts({
                 ? (editingPostId || scheduledDate 
                     ? 'bg-[#ffbb00] text-gray-900 hover:bg-yellow-400 shadow-[0_0_15px_rgba(255,187,0,0.3)]' 
                     : 'bg-[#00ff9d] text-gray-900 shadow-[0_0_15px_rgba(0,255,157,0.3)]') 
-                : 'bg-[#161b22] text-gray-500 cursor-not-allowed shadow-none'
+                : 'bg-gray-100 dark:bg-[#161b22] text-gray-400 cursor-not-allowed shadow-none'
             }`}
           >
             {editingPostId ? '💾 Salvar Alterações' : scheduledDate ? '🕒 Agendar no Banco' : '🚀 Publicar no Google'}

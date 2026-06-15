@@ -26,7 +26,7 @@ export const GBPAudit: React.FC<GBPAuditProps> = ({ loadingAudit, auditData }) =
               <div key={i} className="flex gap-4">
                 <div className="mt-1.5 text-xl">{item.passed ? '✅' : '❌'}</div>
                 <div>
-                  <p className="font-bold text-white text-[15px] mb-1.5">{item.name}</p>
+                  <p className="font-bold text-gray-900 dark:text-white text-[15px] mb-1.5">{item.name}</p>
                   <p className={`text-[13px] ${item.passed ? 'text-gray-500' : 'text-red-400 font-medium'}`}>{item.value}</p>
                 </div>
               </div>

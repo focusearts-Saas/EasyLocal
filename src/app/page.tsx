@@ -1272,7 +1272,7 @@ export default function Dashboard() {
           )}
 
           {appMode === 'gbp' && !selectedGbp && selectedClient && (
-            <div className="max-w-md mx-auto my-20 bg-[#161b22] border border-gray-800 rounded-2xl p-8 text-center relative overflow-hidden animate-fadeIn">
+            <div className="max-w-md mx-auto my-20 bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-2xl p-8 text-center relative overflow-hidden animate-fadeIn">
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-yellow-500/5 blur-[60px] pointer-events-none" />
               <svg
                 className="text-yellow-500 w-12 h-12 mx-auto mb-4"
@@ -1288,7 +1288,7 @@ export default function Dashboard() {
                 <line x1="12" y1="9" x2="12" y2="13" />
                 <line x1="12" y1="17" x2="12.01" y2="17" />
               </svg>
-              <h3 className="text-white font-black text-lg uppercase tracking-tight">Sem Ficha de Maps</h3>
+              <h3 className="text-gray-900 dark:text-white font-black text-lg uppercase tracking-tight">Sem Ficha de Maps</h3>
               <p className="text-gray-400 text-xs mt-2 leading-relaxed">
                 Este negócio ({selectedClient.name}) não possui uma ficha do Google Meu Negócio vinculada ao EasyLocal.
               </p>

@@ -140,12 +140,12 @@ export default function TabGBPEvolution({ gbpData, clientId }: Props) {
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-[#0d1117] border border-white/10 p-4 rounded-xl shadow-2xl">
+        <div className="bg-white dark:bg-[#0d1117] border border-gray-200 dark:border-white/10 p-4 rounded-xl shadow-2xl">
           <p className="text-xs text-gray-400 font-bold mb-2">{label}</p>
           {payload.map((p: any) => (
             <div key={p.name} className="flex items-center gap-2 text-xs font-bold py-1">
               <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: p.color || p.stroke }}></span>
-              <span className="text-white capitalize">{p.name === 'score' ? 'Nota de Saúde' : p.name === 'calls' ? 'Chamadas' : p.name === 'directions' ? 'Rotas' : p.name === 'website_clicks' ? 'Cliques Site' : p.name === 'total_views' ? 'Visualizações Totais' : p.name}:</span>
+              <span className="text-gray-800 dark:text-white capitalize">{p.name === 'score' ? 'Nota de Saúde' : p.name === 'calls' ? 'Chamadas' : p.name === 'directions' ? 'Rotas' : p.name === 'website_clicks' ? 'Cliques Site' : p.name === 'total_views' ? 'Visualizações Totais' : p.name}:</span>
               <span style={{ color: p.color || p.stroke }}>{p.value}{p.name === 'score' ? '%' : ''}</span>
             </div>
           ))}
@@ -161,13 +161,13 @@ export default function TabGBPEvolution({ gbpData, clientId }: Props) {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-gradient-to-r from-[#00ff9d]/10 to-transparent border border-[#00ff9d]/30 rounded-2xl p-8" style={{ boxShadow: '0 0 30px rgba(0, 255, 157, 0.05)' }}>
         <div>
           <p className="text-xs text-[#00ff9d] font-bold uppercase tracking-wider mb-2">Evolução do Perfil</p>
-          <h2 className="text-3xl font-black text-white tracking-tight">Histórico e Evolução da Análise</h2>
+          <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">Histórico e Evolução da Análise</h2>
           <p className="text-sm text-gray-400 mt-2">Acompanhe a melhoria de saúde e o crescimento de tráfego do perfil ao longo do tempo.</p>
         </div>
         <button
           onClick={handleRecalculateAudit}
           disabled={loading}
-          className="bg-[#161b22] text-[#00ff9d] border border-[#00ff9d]/30 hover:border-[#00ff9d] font-bold py-3 px-6 rounded-lg text-sm transition-all shadow-[0_0_20px_rgba(0,255,157,0.1)] hover:shadow-[0_0_30px_rgba(0,255,157,0.3)] disabled:opacity-50"
+          className="bg-white dark:bg-[#161b22] text-[#00ff9d] border border-[#00ff9d]/30 hover:border-[#00ff9d] font-bold py-3 px-6 rounded-lg text-sm transition-all shadow-[0_0_20px_rgba(0,255,157,0.1)] hover:shadow-[0_0_30px_rgba(0,255,157,0.3)] disabled:opacity-50"
         >
           {loading ? 'Processando...' : 'Atualizar Análise de Saúde Now'}
         </button>
@@ -283,7 +283,7 @@ export default function TabGBPEvolution({ gbpData, clientId }: Props) {
                   <tbody className="divide-y divide-white/5">
                     {[...auditHistory].reverse().map((audit) => (
                       <tr key={audit.id} className="hover:bg-white/[0.02] transition-colors">
-                        <td className="py-4 text-white font-bold">
+                        <td className="py-4 text-gray-900 dark:text-white font-bold">
                           {new Date(audit.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
                         </td>
                         <td className="py-4 font-black" style={{ color: audit.color }}>
@@ -321,7 +321,7 @@ export default function TabGBPEvolution({ gbpData, clientId }: Props) {
             
             <div className="glass-card rounded-2xl p-6 border-[#007aff]/10" style={{ boxShadow: '0 0 20px rgba(0, 122, 255, 0.02)' }}>
               <p className="text-xs text-[#007aff] font-bold uppercase tracking-wider mb-2">Ações Totais no Último Mês</p>
-              <h3 className="text-4xl font-black text-white">
+              <h3 className="text-4xl font-black text-gray-900 dark:text-white">
                 {lastMonth ? lastMonth.total_actions : 0}
               </h3>
               <p className="text-xs text-gray-500 mt-1">

@@ -43,10 +43,10 @@ export default function TabSEOInsights({ data, getStrategicInsights }: Props) {
         {getStrategicInsights().length > 0 ? getStrategicInsights().map((ins: any, i: number) => (
           <div key={i} className={`glass-card border-l-4 rounded-r-xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 ${ins.type === 'gold' ? 'border-l-[#00ff9d]' : ins.type === 'maps' ? 'border-l-[#4285F4]' : 'border-l-[#ffbb00]'}`}>
             <div>
-              <h4 className="text-lg font-bold mb-2 text-white">{ins.title}</h4>
+              <h4 className="text-lg font-bold mb-2 text-gray-900 dark:text-white">{ins.title}</h4>
               <p className="text-gray-400 text-sm leading-relaxed max-w-3xl">{ins.desc}</p>
             </div>
-            <button className="bg-white/5 hover:bg-white/10 text-white border border-gray-700 font-bold py-2.5 px-5 rounded-lg text-sm transition-colors whitespace-nowrap">
+            <button className="bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white border border-gray-300 dark:border-gray-700 font-bold py-2.5 px-5 rounded-lg text-sm transition-colors whitespace-nowrap">
               Investigar
             </button>
           </div>

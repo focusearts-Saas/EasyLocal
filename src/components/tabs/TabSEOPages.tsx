@@ -67,28 +67,28 @@ export default function TabSEOPages({ data, selectedClient }: Props) {
       <h2 className="text-2xl font-bold mb-6">📄 Top Páginas (Landing Pages)</h2>
       <div className="glass-card rounded-2xl border-[#00ff9d]/10 overflow-hidden">
         <table className="w-full text-left text-sm border-collapse">
-          <thead className="bg-[#161b22] text-gray-400 border-b border-gray-800">
+          <thead className="bg-gray-50 dark:bg-[#161b22] text-gray-500 border-b border-gray-200 dark:border-gray-800">
             <tr>
               <th 
-                className="px-6 py-4 font-bold cursor-pointer hover:text-white transition-colors"
+                className="px-6 py-4 font-bold cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors"
                 onClick={() => handleSort('page')}
               >
                 Página <SortIcon field="page" />
               </th>
               <th 
-                className="px-6 py-4 font-bold cursor-pointer hover:text-white transition-colors"
+                className="px-6 py-4 font-bold cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors"
                 onClick={() => handleSort('clicks')}
               >
                 Cliques <SortIcon field="clicks" />
               </th>
               <th 
-                className="px-6 py-4 font-bold cursor-pointer hover:text-white transition-colors"
+                className="px-6 py-4 font-bold cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors"
                 onClick={() => handleSort('impressions')}
               >
                 Impressões <SortIcon field="impressions" />
               </th>
               <th 
-                className="px-6 py-4 font-bold cursor-pointer hover:text-white transition-colors"
+                className="px-6 py-4 font-bold cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors"
                 onClick={() => handleSort('ctr')}
               >
                 CTR <SortIcon field="ctr" />
@@ -103,13 +103,13 @@ export default function TabSEOPages({ data, selectedClient }: Props) {
           </thead>
           <tbody className="divide-y divide-gray-800/50">
             {sortedPages.slice(0, 50).map((p: any, i: number) => (
-              <tr key={i} className="hover:bg-[#161b22]/80 transition-colors group">
+              <tr key={i} className="hover:bg-gray-50 dark:hover:bg-[#161b22]/80 transition-colors group">
                 <td className="px-6 py-4 max-w-sm lg:max-w-xl truncate">
                   <a href={p.keys[0]} target="_blank" className="text-[#00ff9d] hover:underline font-medium">
                     {p.keys[0].replace(selectedClient?.gscUrl || '', '') || '/'}
                   </a>
                 </td>
-                <td className="px-6 py-4 text-white font-bold">{p.clicks}</td>
+                <td className="px-6 py-4 text-gray-900 dark:text-white font-bold">{p.clicks}</td>
                 <td className="px-6 py-4 text-gray-400 group-hover:text-gray-200">{p.impressions.toLocaleString()}</td>
                 <td className="px-6 py-4 text-gray-400 group-hover:text-gray-200">{(p.ctr * 100).toFixed(1)}%</td>
                 <td className="px-6 py-4 text-gray-400 group-hover:text-gray-200">{p.position.toFixed(1)}</td>
