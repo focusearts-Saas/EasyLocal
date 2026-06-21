@@ -125,6 +125,7 @@ export default function Dashboard() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [manualDesignCode, setManualDesignCode] = useState('');
+  const [isClientDropdownOpen, setIsClientDropdownOpen] = useState(false);
 
   const fetchSites = async () => {
     try {
@@ -139,8 +140,12 @@ export default function Dashboard() {
       if (Array.isArray(d)) {
         setSites(d);
         if (d.length > 0) {
-          handleSelectClient(d[0]);
-          if (activeTab === 'integrations') {
+          // Priorizar o primeiro cliente que possua integração GBP ativa para não travar na tela de integração
+          const clientWithGbp = d.find((c: any) => c.gbpData);
+          const defaultClient = clientWithGbp || d[0];
+          handleSelectClient(defaultClient);
+          
+          if (activeTab === 'integrations' && defaultClient.gbpData) {
             setActiveTab('gbp-dashboard');
           }
         } else {
@@ -1080,6 +1085,49 @@ export default function Dashboard() {
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
+          {/* Seletor de Cliente Premium no Sidebar */}
+          {sites.length > 0 && (
+            <div className="mb-6 relative">
+              <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold mb-2">Cliente Ativo</p>
+              <button 
+                onClick={() => setIsClientDropdownOpen(!isClientDropdownOpen)}
+                className="w-full bg-gray-50 dark:bg-[#0d1117] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-xs text-gray-800 dark:text-gray-200 font-bold flex items-center justify-between transition-all hover:border-[#00ff9d]/40 active:scale-[0.99] shadow-sm"
+              >
+                <div className="flex items-center gap-2 truncate">
+                  <span className="text-sm">🏪</span>
+                  <span className="truncate">{selectedClient?.name || 'Selecionar Cliente'}</span>
+                </div>
+                <span className="text-gray-400 dark:text-gray-500 text-[9px] ml-2 shrink-0">▼</span>
+              </button>
+
+              {isClientDropdownOpen && (
+                <>
+                  {/* Backdrop para fechar o dropdown ao clicar fora */}
+                  <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setIsClientDropdownOpen(false)} />
+                  <div className="absolute left-0 right-0 mt-1 bg-white dark:bg-[#0d1117] border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl z-50 max-h-60 overflow-y-auto py-1 animate-fadeIn">
+                    {sites.map((c) => (
+                      <button
+                        key={c.id}
+                        onClick={() => {
+                          handleSelectClient(c);
+                          setIsClientDropdownOpen(false);
+                        }}
+                        className={`w-full text-left px-4 py-2.5 text-xs font-bold transition-colors flex items-center justify-between ${
+                          selectedClient?.id === c.id 
+                            ? 'text-[#00ff9d] bg-gray-50 dark:bg-gray-800/40' 
+                            : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60'
+                        }`}
+                      >
+                        <span className="truncate">{c.name}</span>
+                        {selectedClient?.id === c.id && <span className="text-[#00ff9d] text-[10px]">✓</span>}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
           {selectedGbp && (
             <ul className="space-y-1 text-sm">
               <li><button onClick={() => { setActiveTab('gbp-dashboard'); setShowMobileMenu(false); }} className={`w-full text-left px-3 py-2 rounded-md transition-all ${activeTab === 'gbp-dashboard' ? 'bg-[#00ff9d]/10 text-[#00c87b] dark:text-[#00ff9d] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}>🏪 Resumo Local</button></li>
