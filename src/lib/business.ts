@@ -37,6 +37,10 @@ export async function getAccessToken(tokenSupabase?: string) {
     }
   }
 
+  if (!process.env.GOOGLE_ADS_CLIENT_ID || !process.env.GOOGLE_ADS_CLIENT_SECRET) {
+    console.error('❌ GBP: Variáveis de ambiente GOOGLE_ADS_CLIENT_ID ou GOOGLE_ADS_CLIENT_SECRET ausentes no servidor!');
+  }
+
   if (!googleRefreshToken) {
     console.error('❌ GBP: Nenhum refresh token disponível.');
     return null;
@@ -48,8 +52,8 @@ export async function getAccessToken(tokenSupabase?: string) {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       cache: 'no-store',
       body: new URLSearchParams({
-        client_id: process.env.GOOGLE_ADS_CLIENT_ID!.trim(),
-        client_secret: process.env.GOOGLE_ADS_CLIENT_SECRET!.trim(),
+        client_id: (process.env.GOOGLE_ADS_CLIENT_ID || '').trim(),
+        client_secret: (process.env.GOOGLE_ADS_CLIENT_SECRET || '').trim(),
         refresh_token: googleRefreshToken.trim(),
         grant_type: 'refresh_token',
       }),

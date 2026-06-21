@@ -140,6 +140,9 @@ export default function Dashboard() {
         setSites(d);
         if (d.length > 0) {
           handleSelectClient(d[0]);
+          if (activeTab === 'integrations') {
+            setActiveTab('gbp-dashboard');
+          }
         } else {
           // Sem clientes: verificar se já tem integração Google ativa
           const { data: integrationData } = await supabase

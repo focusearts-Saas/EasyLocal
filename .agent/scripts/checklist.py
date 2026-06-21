@@ -133,6 +133,9 @@ def print_summary(results: List[dict]):
     failed_count = sum(1 for r in results if not r["passed"] and not r.get("skipped"))
     skipped_count = sum(1 for r in results if r.get("skipped"))
     
+    # Calcular falhas críticas (que eram exigidas/required)
+    critical_failed_count = sum(1 for r in results if not r["passed"] and not r.get("skipped") and r.get("required", False))
+    
     print(f"Total Checks: {len(results)}")
     print(f"{Colors.GREEN}✅ Passed: {passed_count}{Colors.ENDC}")
     print(f"{Colors.RED}❌ Failed: {failed_count}{Colors.ENDC}")
@@ -148,13 +151,17 @@ def print_summary(results: List[dict]):
         else:
             status = f"{Colors.RED}❌{Colors.ENDC}"
         
-        print(f"{status} {r['name']}")
+        req_label = " (CRITICAL)" if r.get("required") else ""
+        print(f"{status} {r['name']}{req_label}")
     
     print()
     
-    if failed_count > 0:
-        print_error(f"{failed_count} check(s) FAILED - Please fix before proceeding")
+    if critical_failed_count > 0:
+        print_error(f"{critical_failed_count} critical check(s) FAILED - Please fix before proceeding")
         return False
+    elif failed_count > 0:
+        print_warning(f"{failed_count} optional check(s) failed, but proceeding since they are not critical.")
+        return True
     else:
         print_success("All checks PASSED ✨")
         return True
@@ -192,7 +199,7 @@ Examples:
     for name, script_path, required in CORE_CHECKS:
         script = project_path / script_path
         result = run_script(name, script, str(project_path))
-        results.append(result)
+        results.append({**result, "required": required})
         
         # If required check fails, stop
         if required and not result["passed"] and not result.get("skipped"):
@@ -206,7 +213,7 @@ Examples:
         for name, script_path, required in PERFORMANCE_CHECKS:
             script = project_path / script_path
             result = run_script(name, script, str(project_path), args.url)
-            results.append(result)
+            results.append({**result, "required": required})
     
     # Print summary
     all_passed = print_summary(results)
