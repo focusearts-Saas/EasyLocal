@@ -336,10 +336,10 @@ export default function TabGBPRank({
           <div className="flex-1">
             <input type="text" value={newKeyword} onChange={(e) => setNewKeyword(e.target.value)}
               placeholder="Ex: motor de arranque (não precisa colocar a cidade)"
-              className="w-full bg-[#161b22] border border-gray-800 text-white px-5 py-3.5 rounded-xl focus:outline-none focus:border-[#00ff9d] focus:ring-1 focus:ring-[#00ff9d] text-sm font-medium"
+              className="w-full bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white px-5 py-3.5 rounded-xl focus:outline-none focus:border-[#00ff9d] focus:ring-1 focus:ring-[#00ff9d] text-sm font-medium"
               onKeyDown={(e) => e.key === 'Enter' && handleAddKeyword()} />
           </div>
-          <div className="flex items-center gap-2 bg-[#161b22] border border-gray-800 px-3 py-2 rounded-xl" title="O centro da busca usa a coordenada GPS exata do perfil">
+          <div className="flex items-center gap-2 bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 px-3 py-2 rounded-xl" title="O centro da busca usa a coordenada GPS exata do perfil">
             <div className="flex flex-col justify-center">
               <span className="text-[8px] font-bold text-gray-500 uppercase px-1">Base da Busca</span>
               <span className="text-[10px] font-bold text-[#00ff9d] uppercase px-1 max-w-[150px] truncate">📍 {gbpData?.address?.split(',')[0] || gbpData?.title || 'Seu Perfil'}</span>
@@ -347,7 +347,7 @@ export default function TabGBPRank({
             <div className="w-px h-6 bg-gray-800 mx-1"></div>
             <span className="text-[10px] font-bold text-gray-500 uppercase px-1">Raio</span>
             <select value={rankRadius} onChange={(e) => setRankRadius(e.target.value)}
-              className="bg-transparent text-white text-xs font-bold focus:outline-none cursor-pointer">
+              className="bg-transparent text-gray-900 dark:text-white text-xs font-bold focus:outline-none cursor-pointer">
               <option value="16z">3 km</option>
               <option value="15z">5 km</option>
               <option value="14z">10 km</option>
@@ -361,7 +361,7 @@ export default function TabGBPRank({
       </div>
 
       {trackedKeywords.length === 0 ? (
-        <div className="text-center p-16 border border-dashed border-gray-800 rounded-2xl text-gray-500 bg-[#161b22]/30 mt-8">Nenhuma palavra-chave monitorada.</div>
+        <div className="text-center p-16 border border-dashed border-gray-300 dark:border-gray-800 rounded-2xl text-gray-500 bg-gray-100 dark:bg-[#161b22]/30 mt-8">Nenhuma palavra-chave monitorada.</div>
       ) : (
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8">
           {trackedKeywords.map((kw: any, i: number) => {
@@ -370,10 +370,10 @@ export default function TabGBPRank({
             const histLen = kw.rank_history?.length || 0;
             return (
               <div key={i} className="glass-card rounded-2xl p-8 flex flex-col border-[#00ff9d]/10" style={{ boxShadow: '0 0 30px rgba(0, 255, 157, 0.05)' }}>
-                <div className="flex justify-between items-start mb-2 border-b border-gray-800 pb-6">
+                <div className="flex justify-between items-start mb-2 border-b border-gray-200 dark:border-gray-800 pb-6">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
-                      <label className="flex items-center gap-2 cursor-pointer bg-[#161b22] px-3 py-1 rounded-full border border-gray-800 text-[10px] text-gray-400 font-bold uppercase hover:border-[#00ff9d]/30 transition-colors">
+                      <label className="flex items-center gap-2 cursor-pointer bg-white dark:bg-[#161b22] px-3 py-1 rounded-full border border-gray-200 dark:border-gray-800 text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase hover:border-[#00ff9d]/30 transition-colors">
                         <input type="checkbox"
                           checked={selectedForPdf.includes(kw.id)}
                           onChange={(e) => {
@@ -398,7 +398,7 @@ export default function TabGBPRank({
                       </button>
                     </div>
                     <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-2">Termo</p>
-                    <h4 className="text-xl font-black text-white tracking-tight">{kw.keyword}</h4>
+                    <h4 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">{kw.keyword}</h4>
                     <p className="text-[10px] text-gray-500 mt-2">{histLen} atualização{histLen !== 1 ? 'ões' : ''} registrada{histLen !== 1 ? 's' : ''}</p>
                   </div>
                   <div className={`text-5xl font-black tracking-tighter ${lastPos === null ? 'text-gray-700' : colorClass}`}>
@@ -408,11 +408,11 @@ export default function TabGBPRank({
 
                 {!competitorData[kw.keyword] ? (
                   <button onClick={() => fetchCompetitors(kw.keyword)} disabled={loadingComp[kw.keyword]}
-                    className="mt-auto w-full bg-[#161b22] hover:bg-[#161b22]/80 border border-gray-800 text-[#00ff9d] font-bold py-3.5 rounded-xl text-sm transition-colors">
+                    className="mt-auto w-full bg-white dark:bg-[#161b22] hover:bg-[#161b22]/80 border border-gray-200 dark:border-gray-800 text-[#00ff9d] font-bold py-3.5 rounded-xl text-sm transition-colors">
                     {loadingComp[kw.keyword] ? '⏳ Mapeando...' : '🔍 Benchmark com Top 3'}
                   </button>
                 ) : (
-                  <div className="mt-auto bg-[#0d1117]/50 rounded-xl p-5 border border-[#00ff9d]/20">
+                  <div className="mt-auto bg-gray-50 dark:bg-[#0d1117]/50 rounded-xl p-5 border border-[#00ff9d]/20">
                     <p className="text-[10px] text-[#00ff9d] uppercase font-bold tracking-widest mb-4">Top 3 Concorrentes</p>
                     <div className="space-y-4">
                       {(competitorData[kw.keyword]?.list ?? competitorData[kw.keyword] ?? []).map((c: any, idx: number) => (
@@ -423,7 +423,7 @@ export default function TabGBPRank({
                             <span>{idx + 1}. {c.title}</span>
                             <span className="text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">↗️</span>
                           </a>
-                          <div className="flex gap-3 text-xs bg-[#161b22] px-3 py-1.5 rounded-full border border-gray-800">
+                          <div className="flex gap-3 text-xs bg-white dark:bg-[#161b22] px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-800">
                             {c.distanceKm && c.distanceKm !== 'N/A' && (
                               <span className="text-gray-400 font-semibold" title="Distância até o seu perfil">📍 {c.distanceKm}</span>
                             )}

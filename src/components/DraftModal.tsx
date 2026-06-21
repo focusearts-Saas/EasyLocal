@@ -17,26 +17,26 @@ export const DraftModal: React.FC<DraftModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="bg-[#161b22] border border-gray-800 rounded-2xl w-full max-w-2xl max-h-[80vh] flex flex-col overflow-hidden shadow-2xl">
-        <div className="p-6 border-b border-gray-800 flex justify-between items-center bg-[#0d1117]">
+      <div className="bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-2xl w-full max-w-2xl max-h-[80vh] flex flex-col overflow-hidden shadow-2xl">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center bg-gray-50 dark:bg-[#0d1117]">
           <div>
-            <h3 className="text-xl font-bold text-white">Rascunho de Conteúdo IA</h3>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white">Rascunho de Conteúdo IA</h3>
             <p className="text-xs text-gray-500 mt-1">Gerado pelo Gemini 1.5 Pro</p>
           </div>
-          <button onClick={() => setViewingDraft(null)} className="p-2 text-gray-400 hover:text-white">✕</button>
+          <button onClick={() => setViewingDraft(null)} className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-white">✕</button>
         </div>
-        <div className="p-8 overflow-y-auto bg-[#0d1117]/50 text-gray-300 whitespace-pre-wrap font-serif text-lg leading-relaxed">
+        <div className="p-8 overflow-y-auto bg-white dark:bg-[#0d1117]/50 text-gray-700 dark:text-gray-300 whitespace-pre-wrap font-serif text-lg leading-relaxed border-b border-gray-100 dark:border-none">
           {viewingDraft.draft}
         </div>
-        <div className="p-6 border-t border-gray-800 flex justify-end gap-4 bg-[#0d1117]">
-          <button onClick={() => setViewingDraft(null)} className="px-6 py-2.5 rounded-xl font-bold text-sm text-gray-400 hover:text-white transition-colors">Fechar</button>
+        <div className="p-6 border-t border-gray-200 dark:border-gray-800 flex justify-end gap-4 bg-gray-50 dark:bg-[#0d1117]">
+          <button onClick={() => setViewingDraft(null)} className="px-6 py-2.5 rounded-xl font-bold text-sm text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors">Fechar</button>
           <button 
             onClick={() => {
               const opp = seoOpportunities.find(o => o.id === viewingDraft.id);
               handleViewLayout(opp);
               setViewingDraft(null);
             }}
-            className="bg-white/10 hover:bg-white/20 text-white font-bold px-8 py-2.5 rounded-xl text-sm border border-white/20 transition-all flex items-center gap-2">
+            className="bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/20 text-gray-800 dark:text-white font-bold px-8 py-2.5 rounded-xl text-sm border border-gray-300 dark:border-white/20 transition-all flex items-center gap-2">
             🎨 Gerar Layout (Stitch)
           </button>
           <button 

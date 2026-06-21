@@ -27,7 +27,7 @@ export default function TabSEOOpportunities({
         </div>
         <button
           onClick={() => selectedClient?.id && fetchOpportunities(selectedClient.id)}
-          className="bg-[#161b22] border border-[#00ff9d]/30 text-[#00ff9d] font-bold px-5 py-2.5 rounded-xl text-sm transition-colors hover:bg-[#161b22]/80">
+          className="bg-white dark:bg-[#161b22] border border-[#00ff9d]/30 text-[#00ff9d] font-bold px-5 py-2.5 rounded-xl text-sm transition-colors hover:bg-[#00ff9d]/10">
           🔄 Sincronizar Fila
         </button>
       </div>
@@ -35,7 +35,7 @@ export default function TabSEOOpportunities({
       <div className="glass-card rounded-2xl border-[#00ff9d]/10 p-1 mt-6">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-gray-800 text-gray-500 uppercase tracking-wider text-[10px] font-bold bg-[#161b22]/50">
+            <tr className="border-b border-gray-200 dark:border-gray-800 text-gray-500 uppercase tracking-wider text-[10px] font-bold bg-gray-50 dark:bg-[#161b22]/50">
               <th className="p-4 rounded-tl-xl">Termo Encontrado</th>
               <th className="p-4 text-right">Métricas (Imp. / CTR)</th>
               <th className="p-4 text-center">Status</th>
@@ -52,13 +52,13 @@ export default function TabSEOOpportunities({
               const blocked = configBranded.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
               return !blocked.some(b => opp.keyword.toLowerCase().includes(b));
             }).map(opp => (
-              <tr key={opp.id} className="border-b border-gray-800/50 hover:bg-[#161b22]/40 transition-colors group">
+              <tr key={opp.id} className="border-b border-gray-100 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-[#161b22]/40 transition-colors group">
                 <td className="p-4">
-                  <p className="font-bold text-white text-[15px]">{opp.keyword}</p>
+                  <p className="font-bold text-gray-900 dark:text-white text-[15px]">{opp.keyword}</p>
                   <p className="text-xs text-gray-500 mt-1">Identificado em {new Date(opp.created_at).toLocaleDateString()}</p>
                 </td>
                 <td className="p-4 text-right">
-                  <p className="text-white font-bold">{(opp.impressions || 0).toLocaleString()}</p>
+                  <p className="text-gray-900 dark:text-white font-bold">{(opp.impressions || 0).toLocaleString()}</p>
                   <p className="text-xs text-red-400 font-medium mt-1">{(opp.ctr || 0)}% CTR</p>
                 </td>
                 <td className="p-4 text-center">
@@ -79,17 +79,17 @@ export default function TabSEOOpportunities({
                     </button>
                   ) : opp.status === 'aprovada' ? (
                     <button onClick={() => handleViewLayout(opp)}
-                      className="bg-white/5 hover:bg-white/10 text-white font-bold py-2 px-4 rounded-xl border border-white/10 transition-all flex items-center gap-2">
+                      className="bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white font-bold py-2 px-4 rounded-xl border border-gray-200 dark:border-white/10 transition-all flex items-center gap-2">
                       🎨 Visualizar Layout
                     </button>
                   ) : opp.status === 'rascunho_gerado' ? (
                     <button onClick={() => setViewingDraft({ id: opp.id, draft: opp.content_draft, keyword: opp.keyword })}
-                      className="bg-[#161b22] border border-purple-500/50 text-purple-400 font-bold px-4 py-2 rounded-lg text-xs hover:bg-purple-500/10 transition-all">
+                      className="bg-white dark:bg-[#161b22] border border-purple-500/50 text-purple-400 font-bold px-4 py-2 rounded-lg text-xs hover:bg-purple-500/10 transition-all">
                       👁️ Ver Rascunho
                     </button>
                   ) : opp.status === 'layout_gerado' ? (
                     <button onClick={() => setViewingDraft({ id: opp.id, draft: opp.content_draft, layout_draft: opp.layout_draft, published_url: opp.published_url, keyword: opp.keyword })}
-                      className="bg-[#161b22] border border-[#00ff9d]/50 text-[#00ff9d] font-bold px-4 py-2 rounded-lg text-xs hover:bg-[#00ff9d]/10 transition-all">
+                      className="bg-white dark:bg-[#161b22] border border-[#00ff9d]/50 text-[#00ff9d] font-bold px-4 py-2 rounded-lg text-xs hover:bg-[#00ff9d]/10 transition-all">
                       ✨ Ver Layout Final
                     </button>
                   ) : opp.status === 'publicada' ? (
@@ -109,10 +109,10 @@ export default function TabSEOOpportunities({
       {/* MODAL DE RASCUNHO / LAYOUT */}
       {viewingDraft && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-[#161b22] border border-gray-800 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
-            <div className="p-6 border-b border-gray-800 flex justify-between items-center bg-[#0d1117]">
+          <div className="bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center bg-gray-50 dark:bg-[#0d1117]">
               <div>
-                <h3 className="text-xl font-bold text-white">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                   {viewingDraft.layout_draft ? '🎨 Layout Gerado — Pronto para Aprovar' : '📝 Rascunho de Conteúdo IA'}
                 </h3>
                 <p className="text-xs text-gray-500 mt-1">
@@ -124,7 +124,7 @@ export default function TabSEOOpportunities({
               <button onClick={() => setViewingDraft(null)} className="p-2 text-gray-400 hover:text-white">✕</button>
             </div>
             
-            <div className="p-8 overflow-y-auto bg-[#0d1117]/50 flex-1 flex flex-col gap-6">
+            <div className="p-8 overflow-y-auto bg-white dark:bg-[#0d1117]/50 flex-1 flex flex-col gap-6">
               {!viewingDraft.layout_draft ? (
                 // Visão de Texto (rascunho de copy)
                 <div className="flex-1 flex flex-col">
@@ -158,8 +158,8 @@ export default function TabSEOOpportunities({
                     </button>
                   </div>
                   
-                  <div className="flex-1 bg-[#0d1117] rounded-xl overflow-hidden border border-gray-700 min-h-[400px] flex flex-col relative">
-                    <div className="p-3 bg-[#161b22] border-b border-gray-700 flex items-center gap-2 shrink-0">
+                  <div className="flex-1 bg-gray-50 dark:bg-[#0d1117] rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 min-h-[400px] flex flex-col relative">
+                    <div className="p-3 bg-gray-100 dark:bg-[#161b22] border-b border-gray-200 dark:border-gray-700 flex items-center gap-2 shrink-0">
                       <span className="w-3 h-3 rounded-full bg-red-500"></span>
                       <span className="w-3 h-3 rounded-full bg-yellow-500"></span>
                       <span className="w-3 h-3 rounded-full bg-green-500"></span>
@@ -185,7 +185,7 @@ export default function TabSEOOpportunities({
               )}
             </div>
 
-            <div className="p-6 border-t border-gray-800 flex justify-end gap-4 bg-[#0d1117]">
+            <div className="p-6 border-t border-gray-200 dark:border-gray-800 flex justify-end gap-4 bg-gray-50 dark:bg-[#0d1117]">
               <button onClick={() => setViewingDraft(null)} className="px-6 py-2.5 rounded-xl font-bold text-sm text-gray-400 hover:text-white transition-colors">Fechar</button>
               
               {!viewingDraft.layout_draft ? (
@@ -196,7 +196,7 @@ export default function TabSEOOpportunities({
                     (e.target as HTMLButtonElement).innerText = '⏳ Gerando Layout...';
                     handleViewLayout(opp);
                   }}
-                  className={`bg-white/10 hover:bg-white/20 text-white font-bold px-8 py-2.5 rounded-xl text-sm border border-white/20 transition-all ${(!viewingDraft.draft || viewingDraft.draft.length < 50) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                  className={`bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-700 dark:text-white font-bold px-8 py-2.5 rounded-xl text-sm border border-gray-200 dark:border-white/20 transition-all ${(!viewingDraft.draft || viewingDraft.draft.length < 50) ? 'opacity-50 cursor-not-allowed' : ''}`}>
                   🎨 Gerar Layout com Identidade do Site
                 </button>
               ) : (

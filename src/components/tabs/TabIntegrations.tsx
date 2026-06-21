@@ -172,10 +172,10 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
 
   if (loading) {
     return (
-      <div className="bg-[#161b22] border border-gray-800 rounded-xl p-8 flex items-center justify-center min-h-[300px]">
+      <div className="bg-gray-50 dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-xl p-8 flex items-center justify-center min-h-[300px]">
         <div className="flex flex-col items-center gap-3">
           <RefreshCw className="w-8 h-8 text-[#00ff9d] animate-spin" />
-          <span className="text-gray-400 text-xs font-bold">Verificando conexões ativas...</span>
+          <span className="text-gray-500 dark:text-gray-400 text-xs font-bold">Verificando conexões ativas...</span>
         </div>
       </div>
     );
@@ -187,7 +187,7 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
       {/* Cabeçalho */}
       <div className="flex items-center justify-between border-b border-gray-850 pb-5">
         <div>
-          <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight flex items-center gap-2">
             <span>🔌 Central de Integrações</span>
           </h2>
           <p className="text-gray-400 text-xs mt-1">Conecte e gerencie seus canais externos para alimentar o motor do EasyLocal.</p>
@@ -205,7 +205,7 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* Card do Google APIs (Search Console & GBP) */}
-        <div className="bg-[#161b22] border border-gray-800 rounded-2xl p-6 relative overflow-hidden transition-all duration-300 hover:border-gray-700/80 shadow-lg">
+        <div className="bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-2xl p-6 relative overflow-hidden transition-all duration-300 hover:border-[#00ff9d]/40 dark:hover:border-gray-700/80 shadow-lg">
           
           {/* Efeito visual brilhante de fundo */}
           {integration ? (
@@ -216,7 +216,7 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
 
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-xl bg-[#0d1117] border border-gray-800 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-[#0d1117] border border-gray-200 dark:border-gray-800 flex items-center justify-center">
                 <svg className="w-6 h-6" viewBox="0 0 24 24">
                   <path
                     fill="currentColor"
@@ -237,7 +237,7 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
                 </svg>
               </div>
               <div>
-                <h3 className="font-bold text-white text-sm">Google Services Suite</h3>
+                <h3 className="font-bold text-gray-900 dark:text-white text-sm">Google Services Suite</h3>
                 <span className="text-[10px] font-bold text-gray-500 tracking-wider uppercase">Search Console + Maps</span>
               </div>
             </div>
@@ -264,14 +264,14 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
           {integration ? (
             /* Layout Conectado */
             <div className="space-y-4">
-              <div className="bg-[#0d1117] border border-gray-800/80 rounded-xl p-4 flex items-center justify-between">
+              <div className="bg-gray-50 dark:bg-[#0d1117] border border-gray-200 dark:border-gray-800/80 rounded-xl p-4 flex items-center justify-between">
                 <div className="flex flex-col">
                   <span className="text-[9px] font-bold text-gray-500 tracking-wider uppercase">E-mail Conectado</span>
-                  <span className="text-xs text-gray-300 font-bold mt-0.5">{integration.google_email}</span>
+                  <span className="text-xs text-gray-700 dark:text-gray-300 font-bold mt-0.5">{integration.google_email}</span>
                 </div>
                 <div className="flex flex-col items-end">
                   <span className="text-[9px] font-bold text-gray-500 tracking-wider uppercase">Última Sincronização</span>
-                  <span className="text-xs text-gray-300 font-bold mt-0.5">Automática</span>
+                  <span className="text-xs text-gray-700 dark:text-gray-300 font-bold mt-0.5">Automática</span>
                 </div>
               </div>
 
@@ -288,7 +288,7 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
                 <button
                   disabled={actionLoading || syncing}
                   onClick={handleDisconnect}
-                  className="flex-1 py-3 bg-[#0d1117] hover:bg-rose-500/5 hover:text-rose-400 border border-gray-800 hover:border-rose-500/30 text-gray-400 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all duration-200 active:scale-[0.98] disabled:opacity-50"
+                  className="flex-1 py-3 bg-white dark:bg-[#0d1117] hover:bg-rose-50 dark:hover:bg-rose-500/5 hover:text-rose-400 border border-gray-200 dark:border-gray-800 hover:border-rose-500/30 text-gray-600 dark:text-gray-400 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all duration-200 active:scale-[0.98] disabled:opacity-50"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Desconectar Conta</span>
@@ -298,7 +298,7 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
           ) : (
             /* Layout Desconectado */
             <div className="space-y-4">
-              <div className="bg-[#0d1117] border border-gray-850 rounded-xl p-4 flex items-center gap-3">
+              <div className="bg-gray-50 dark:bg-[#0d1117] border border-gray-200 dark:border-gray-850 rounded-xl p-4 flex items-center gap-3">
                 <ShieldCheck className="w-5 h-5 text-gray-500 shrink-0" />
                 <span className="text-[11px] text-gray-500 leading-normal">
                   Seus dados estão protegidos por criptografia ponta a ponta e respeitam a LGPD.
@@ -317,10 +317,10 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
         </div>
 
         {/* Card Placeholder para futuras integrações (Ex: Meta/Instagram Ads) */}
-        <div className="bg-[#161b22]/50 border border-gray-800/60 border-dashed rounded-2xl p-6 flex flex-col justify-between min-h-[250px] opacity-60">
+        <div className="bg-gray-50/50 dark:bg-[#161b22]/50 border border-gray-200/60 dark:border-gray-800/60 border-dashed rounded-2xl p-6 flex flex-col justify-between min-h-[250px] opacity-60">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-xl bg-[#0d1117] border border-gray-800/40 flex items-center justify-center text-gray-600">
+              <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-[#0d1117] border border-gray-200/40 dark:border-gray-800/40 flex items-center justify-center text-gray-600">
                 🌐
               </div>
               <div>
@@ -336,7 +336,7 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
 
           <button
             disabled
-            className="w-full py-3 bg-[#0d1117] border border-gray-850 text-gray-600 font-bold rounded-xl text-xs flex items-center justify-center gap-2 cursor-not-allowed"
+            className="w-full py-3 bg-gray-100 dark:bg-[#0d1117] border border-gray-200 dark:border-gray-850 text-gray-500 dark:text-gray-600 font-bold rounded-xl text-xs flex items-center justify-center gap-2 cursor-not-allowed"
           >
             <span>Indisponível no momento</span>
           </button>
@@ -344,7 +344,7 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
 
         {/* Card Alertas de WhatsApp */}
         {selectedClient && (
-          <div className="bg-[#161b22] border border-[#00ff9d]/20 rounded-2xl p-6 shadow-lg shadow-[#00ff9d]/5 relative overflow-hidden md:col-span-2">
+          <div className="bg-white dark:bg-[#161b22] border border-[#00ff9d]/20 rounded-2xl p-6 shadow-lg shadow-[#00ff9d]/5 relative overflow-hidden md:col-span-2">
             <div className="absolute top-0 right-0 w-[120px] h-[120px] rounded-full bg-[#00ff9d]/5 blur-2xl pointer-events-none"></div>
             <div className="flex items-center gap-3.5 mb-6">
               <div className="w-12 h-12 rounded-xl bg-[#00ff9d]/10 border border-[#00ff9d]/20 flex items-center justify-center text-[#00ff9d]">
@@ -353,7 +353,7 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
                 </svg>
               </div>
               <div>
-                <h3 className="font-bold text-white text-sm">Alertas por WhatsApp (Pub/Sub)</h3>
+                <h3 className="font-bold text-gray-900 dark:text-white text-sm">Alertas por WhatsApp (Pub/Sub)</h3>
                 <span className="text-[9px] font-bold text-[#00ff9d] tracking-wider uppercase">Notificações em Tempo Real</span>
               </div>
             </div>
@@ -370,7 +370,7 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
                   value={whatsapp}
                   onChange={(e) => setWhatsapp(e.target.value)}
                   placeholder="Ex: 11999998888"
-                  className="w-full bg-[#0d1117] border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#00ff9d] transition-all"
+                  className="w-full bg-gray-50 dark:bg-[#0d1117] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-[#00ff9d] transition-all"
                 />
               </div>
               <button
@@ -389,7 +389,7 @@ export default function TabIntegrations({ session, onSync, selectedClient }: Tab
               <button
                 onClick={handleRegisterPubSub}
                 disabled={registeringPubSub}
-                className="w-full sm:w-auto bg-[#161b22] border border-[#00ff9d]/30 text-[#00ff9d] hover:bg-[#00ff9d]/10 font-bold px-6 py-2.5 rounded-xl text-xs transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full sm:w-auto bg-white dark:bg-[#161b22] border border-[#00ff9d]/30 text-[#00ff9d] hover:bg-[#00ff9d]/10 font-bold px-6 py-2.5 rounded-xl text-xs transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {registeringPubSub ? 'Ativando...' : '⚡ Ativar Gatilho Google'}
               </button>

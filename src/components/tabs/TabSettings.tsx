@@ -110,9 +110,9 @@ export default function TabSettings({ session }: { session: any }) {
 
   return (
     <div className="space-y-6 max-w-4xl animate-fadeIn">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-gray-800 pb-5">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-gray-200 dark:border-gray-800 pb-5">
         <div>
-          <h2 className="text-3xl font-black text-white tracking-tighter uppercase flex items-center gap-2">
+          <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tighter uppercase flex items-center gap-2">
             <Building2 className="text-[#00ff9d] w-8 h-8" />
             Configurações <span className="text-[#00ff9d]">da Agência</span>
           </h2>
@@ -122,7 +122,7 @@ export default function TabSettings({ session }: { session: any }) {
         </div>
       </div>
 
-      <div className="bg-[#161b22] border border-gray-800 rounded-2xl p-8 relative overflow-hidden">
+      <div className="bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-2xl p-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#00ff9d]/5 blur-[80px] pointer-events-none" />
         
         {message && (
@@ -144,7 +144,7 @@ export default function TabSettings({ session }: { session: any }) {
                 value={agencyName}
                 onChange={(e) => setAgencyName(e.target.value)}
                 placeholder="Ex: Focus Arts, João Silva SEO"
-                className="w-full bg-[#0d1117] border border-gray-800 rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/30 transition-all"
+                className="w-full bg-gray-50 dark:bg-[#0d1117] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/30 transition-all"
               />
               <p className="text-[10px] text-gray-500 font-semibold">Este nome poderá ser usado em comunicações automatizadas e relatórios.</p>
             </div>
@@ -153,7 +153,7 @@ export default function TabSettings({ session }: { session: any }) {
               <label className="text-xs font-black text-gray-400 uppercase tracking-widest block">Logotipo da sua Agência</label>
               
               <div className="flex items-center gap-6">
-                <div className="w-24 h-24 rounded-xl bg-[#0d1117] border-2 border-dashed border-gray-700 flex flex-col items-center justify-center shrink-0 overflow-hidden relative group">
+                <div className="w-24 h-24 rounded-xl bg-gray-100 dark:bg-[#0d1117] border-2 border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center shrink-0 overflow-hidden relative group">
                   {agencyLogoUrl ? (
                     <img src={agencyLogoUrl} alt="Logo" className="w-full h-full object-contain p-2" />
                   ) : (
@@ -179,7 +179,7 @@ export default function TabSettings({ session }: { session: any }) {
                       value={agencyLogoUrl}
                       onChange={(e) => setAgencyLogoUrl(e.target.value)}
                       placeholder="https://sua-logo.com/logo.png"
-                      className="w-full bg-[#0d1117] border border-gray-800 rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-[#00ff9d]/50 transition-all"
+                      className="w-full bg-gray-50 dark:bg-[#0d1117] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#00ff9d]/50 transition-all"
                     />
                   </div>
                   <p className="text-[10px] text-gray-500 font-semibold mt-2">
@@ -190,8 +190,8 @@ export default function TabSettings({ session }: { session: any }) {
             </div>
           </div>
 
-          <div className="border-t border-gray-800/80 pt-6">
-            <h3 className="text-sm font-black text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+          <div className="border-t border-gray-200 dark:border-gray-800/80 pt-6">
+            <h3 className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest mb-4 flex items-center gap-2">
               <Phone className="text-[#00ff9d] w-4 h-4" /> Informações de Contato (Exibidos no PDF do Relatório)
             </h3>
             
@@ -205,7 +205,7 @@ export default function TabSettings({ session }: { session: any }) {
                   value={agencyInstagram}
                   onChange={(e) => setAgencyInstagram(e.target.value)}
                   placeholder="Ex: @focus.earts"
-                  className="w-full bg-[#0d1117] border border-gray-800 rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/30 transition-all"
+                  className="w-full bg-gray-50 dark:bg-[#0d1117] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/30 transition-all"
                 />
               </div>
 
@@ -218,7 +218,7 @@ export default function TabSettings({ session }: { session: any }) {
                   value={agencyWebsite}
                   onChange={(e) => setAgencyWebsite(e.target.value)}
                   placeholder="Ex: www.focusarts.com.br"
-                  className="w-full bg-[#0d1117] border border-gray-800 rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/30 transition-all"
+                  className="w-full bg-gray-50 dark:bg-[#0d1117] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/30 transition-all"
                 />
               </div>
 
@@ -231,7 +231,7 @@ export default function TabSettings({ session }: { session: any }) {
                   value={agencyPhone}
                   onChange={(e) => setAgencyPhone(e.target.value)}
                   placeholder="Ex: +55 (34) 99762-2017"
-                  className="w-full bg-[#0d1117] border border-gray-800 rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/30 transition-all"
+                  className="w-full bg-gray-50 dark:bg-[#0d1117] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/30 transition-all"
                 />
               </div>
 
@@ -244,13 +244,13 @@ export default function TabSettings({ session }: { session: any }) {
                   value={agencyAddress}
                   onChange={(e) => setAgencyAddress(e.target.value)}
                   placeholder="Ex: Av. Afonso Pena, 1500 - Belo Horizonte"
-                  className="w-full bg-[#0d1117] border border-gray-800 rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/30 transition-all"
+                  className="w-full bg-gray-50 dark:bg-[#0d1117] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-[#00ff9d]/50 focus:ring-1 focus:ring-[#00ff9d]/30 transition-all"
                 />
               </div>
             </div>
           </div>
 
-          <div className="border-t border-gray-800 pt-6 flex justify-end">
+          <div className="border-t border-gray-200 dark:border-gray-800 pt-6 flex justify-end">
             <button
               type="submit"
               disabled={loading}

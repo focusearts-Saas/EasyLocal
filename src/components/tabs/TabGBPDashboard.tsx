@@ -28,12 +28,12 @@ export default function TabGBPDashboard({ gbpData, days }: Props) {
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-[#0d1117] border border-white/10 p-3 rounded-lg shadow-2xl">
-          <p className="text-[10px] text-gray-400 font-bold mb-2">{label}</p>
+        <div className="bg-white dark:bg-[#0d1117] border border-gray-200 dark:border-white/10 p-3 rounded-lg shadow-2xl">
+          <p className="text-[10px] text-gray-500 dark:text-gray-400 font-bold mb-2">{label}</p>
           {payload.map((p: any) => (
             <div key={p.name} className="flex items-center gap-2 text-xs font-bold py-0.5">
               <span className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }}></span>
-              <span className="text-white capitalize">{p.name === 'calls' ? 'Chamadas' : p.name === 'directions' ? 'Rotas' : 'Site'}:</span>
+              <span className="text-gray-800 dark:text-white capitalize">{p.name === 'calls' ? 'Chamadas' : p.name === 'directions' ? 'Rotas' : 'Site'}:</span>
               <span style={{ color: p.color }}>{p.value}</span>
             </div>
           ))}
@@ -97,7 +97,7 @@ export default function TabGBPDashboard({ gbpData, days }: Props) {
                   <stop offset="95%" stopColor="#007aff" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#00000010" className="dark:[stroke:#ffffff05]" vertical={false} />
               <XAxis 
                 dataKey="date" 
                 axisLine={false}

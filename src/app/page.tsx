@@ -11,6 +11,7 @@ import TabGBPPosts from '@/components/tabs/TabGBPPosts';
 import TabGBPEvolution from '@/components/tabs/TabGBPEvolution';
 import TabGBPCards from '@/components/tabs/TabGBPCards';
 import TabIntegrations from '@/components/tabs/TabIntegrations';
+import TabGBPPlaybook from '@/components/tabs/TabGBPPlaybook';
 import MonthRangePicker from '@/components/MonthRangePicker';
 import SubscriptionGate from '@/components/SubscriptionGate';
 
@@ -75,6 +76,15 @@ export default function Dashboard() {
   const [scheduledDate, setScheduledDate] = useState('');
   const [scheduledPosts, setScheduledPosts] = useState<any[]>([]);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
+
+  // Novos estados para Ofertas e Eventos
+  const [topicType, setTopicType] = useState('STANDARD');
+  const [eventTitle, setEventTitle] = useState('');
+  const [eventStartDate, setEventStartDate] = useState('');
+  const [eventEndDate, setEventEndDate] = useState('');
+  const [offerCouponCode, setOfferCouponCode] = useState('');
+  const [offerRedeemUrl, setOfferRedeemUrl] = useState('');
+  const [offerTerms, setOfferTerms] = useState('');
 
   const [auditData, setAuditData] = useState<any>(null);
   const [loadingAudit, setLoadingAudit] = useState(false);
@@ -838,14 +848,29 @@ export default function Dashboard() {
         }
       }
 
+      // Validação de campos obrigatórios para Ofertas e Eventos
+      if (topicType === 'EVENT' || topicType === 'OFFER') {
+        if (!eventTitle || !eventStartDate || !eventEndDate) {
+          alert('⚠️ O título, data de início e data de término são obrigatórios para Eventos e Ofertas.');
+          return;
+        }
+      }
+
       if (editingPostId) {
         await supabase.from('scheduled_posts').update({
           scheduled_for: scheduledDate ? new Date(scheduledDate).toISOString() : new Date().toISOString(),
           content: postText,
           image_url: imageUrl,
-          button_type: buttonType,
-          button_url: buttonUrl,
-          status: 'pending'
+          button_type: topicType === 'OFFER' ? 'NONE' : buttonType,
+          button_url: topicType === 'OFFER' ? '' : buttonUrl,
+          status: 'pending',
+          topic_type: topicType,
+          event_title: (topicType === 'EVENT' || topicType === 'OFFER') ? eventTitle : null,
+          event_start_date: (topicType === 'EVENT' || topicType === 'OFFER') && eventStartDate ? new Date(eventStartDate).toISOString() : null,
+          event_end_date: (topicType === 'EVENT' || topicType === 'OFFER') && eventEndDate ? new Date(eventEndDate).toISOString() : null,
+          offer_coupon_code: topicType === 'OFFER' ? offerCouponCode : null,
+          offer_redeem_url: topicType === 'OFFER' ? offerRedeemUrl : null,
+          offer_terms: topicType === 'OFFER' ? offerTerms : null,
         }).eq('id', editingPostId);
         alert('Agendamento atualizado!');
         setEditingPostId(null);
@@ -855,11 +880,18 @@ export default function Dashboard() {
           scheduled_for: new Date(scheduledDate).toISOString(),
           content: postText,
           image_url: imageUrl,
-          button_type: buttonType,
-          button_url: buttonUrl,
+          button_type: topicType === 'OFFER' ? 'NONE' : buttonType,
+          button_url: topicType === 'OFFER' ? '' : buttonUrl,
           location_id: gbpData.locationId,
           account_id: gbpData.accountId,
-          status: 'pending'
+          status: 'pending',
+          topic_type: topicType,
+          event_title: (topicType === 'EVENT' || topicType === 'OFFER') ? eventTitle : null,
+          event_start_date: (topicType === 'EVENT' || topicType === 'OFFER') && eventStartDate ? new Date(eventStartDate).toISOString() : null,
+          event_end_date: (topicType === 'EVENT' || topicType === 'OFFER') && eventEndDate ? new Date(eventEndDate).toISOString() : null,
+          offer_coupon_code: topicType === 'OFFER' ? offerCouponCode : null,
+          offer_redeem_url: topicType === 'OFFER' ? offerRedeemUrl : null,
+          offer_terms: topicType === 'OFFER' ? offerTerms : null,
         }]);
         alert('Agendado!');
         fetchScheduledPosts(gbpData.locationId);
@@ -870,12 +902,33 @@ export default function Dashboard() {
           body: JSON.stringify({
             accountId: gbpData.accountId,
             locationId: gbpData.locationId,
-            postText, imageUrl, buttonType, buttonUrl
+            postText,
+            imageUrl,
+            buttonType: topicType === 'OFFER' ? 'NONE' : buttonType,
+            buttonUrl: topicType === 'OFFER' ? '' : buttonUrl,
+            topicType,
+            eventTitle: (topicType === 'EVENT' || topicType === 'OFFER') ? eventTitle : null,
+            eventStartDate: (topicType === 'EVENT' || topicType === 'OFFER') && eventStartDate ? new Date(eventStartDate).toISOString() : null,
+            eventEndDate: (topicType === 'EVENT' || topicType === 'OFFER') && eventEndDate ? new Date(eventEndDate).toISOString() : null,
+            couponCode: topicType === 'OFFER' ? offerCouponCode : null,
+            redeemOnlineUrl: topicType === 'OFFER' ? offerRedeemUrl : null,
+            termsConditions: topicType === 'OFFER' ? offerTerms : null,
           })
         });
         alert('Publicado!');
       }
-      setPostText(''); setImageUrl(''); setScheduledDate(''); setButtonType('NONE'); setButtonUrl('');
+      setPostText('');
+      setImageUrl('');
+      setScheduledDate('');
+      setButtonType('NONE');
+      setButtonUrl('');
+      setTopicType('STANDARD');
+      setEventTitle('');
+      setEventStartDate('');
+      setEventEndDate('');
+      setOfferCouponCode('');
+      setOfferRedeemUrl('');
+      setOfferTerms('');
       setEditingPostId(null);
     } catch (e) { console.error(e); }
   };
@@ -893,6 +946,27 @@ export default function Dashboard() {
     } else {
       setScheduledDate('');
     }
+
+    setTopicType(post.topic_type || 'STANDARD');
+    setEventTitle(post.event_title || '');
+    if (post.event_start_date) {
+      const d = new Date(post.event_start_date);
+      const offset = d.getTimezoneOffset() * 60000;
+      setEventStartDate((new Date(d.getTime() - offset)).toISOString().slice(0, 16));
+    } else {
+      setEventStartDate('');
+    }
+    if (post.event_end_date) {
+      const d = new Date(post.event_end_date);
+      const offset = d.getTimezoneOffset() * 60000;
+      setEventEndDate((new Date(d.getTime() - offset)).toISOString().slice(0, 16));
+    } else {
+      setEventEndDate('');
+    }
+    setOfferCouponCode(post.offer_coupon_code || '');
+    setOfferRedeemUrl(post.offer_redeem_url || '');
+    setOfferTerms(post.offer_terms || '');
+
     setEditingPostId(post.id);
   };
 
@@ -903,6 +977,8 @@ export default function Dashboard() {
       setScheduledPosts(prev => prev.filter((p: any) => p.id !== id));
       if (editingPostId === id) {
         setPostText(''); setImageUrl(''); setScheduledDate(''); setButtonType('NONE'); setButtonUrl('');
+        setTopicType('STANDARD'); setEventTitle(''); setEventStartDate(''); setEventEndDate('');
+        setOfferCouponCode(''); setOfferRedeemUrl(''); setOfferTerms('');
         setEditingPostId(null);
       }
       alert('Agendamento cancelado!');
@@ -1000,6 +1076,7 @@ export default function Dashboard() {
               <li><button onClick={() => { setActiveTab('gbp-posts'); setShowMobileMenu(false); }} className={`w-full text-left px-3 py-2 rounded-md transition-all ${activeTab === 'gbp-posts' ? 'bg-[#00ff9d]/10 text-[#00c87b] dark:text-[#00ff9d] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}>📣 Postagens</button></li>
               <li><button onClick={() => { setActiveTab('gbp-cards'); setShowMobileMenu(false); }} className={`w-full text-left px-3 py-2 rounded-md transition-all ${activeTab === 'gbp-cards' ? 'bg-[#00ff9d]/10 text-[#00c87b] dark:text-[#00ff9d] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}>🎴 Cards de Avaliação</button></li>
               <li><button onClick={() => { setActiveTab('gbp-evolution'); setShowMobileMenu(false); }} className={`w-full text-left px-3 py-2 rounded-md transition-all ${activeTab === 'gbp-evolution' ? 'bg-[#00ff9d]/10 text-[#00c87b] dark:text-[#00ff9d] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}>📈 Evolução da Análise</button></li>
+              <li><button onClick={() => { setActiveTab('gbp-playbook'); setShowMobileMenu(false); }} className={`w-full text-left px-3 py-2 rounded-md transition-all ${activeTab === 'gbp-playbook' ? 'bg-[#00ff9d]/10 text-[#00c87b] dark:text-[#00ff9d] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}>📖 Guia de Crescimento</button></li>
               <li><button onClick={() => { setActiveTab('integrations'); setShowMobileMenu(false); }} className={`w-full text-left px-3 py-2 rounded-md transition-all ${activeTab === 'integrations' ? 'bg-[#00ff9d]/10 text-[#00c87b] dark:text-[#00ff9d] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}>🔌 Integrações</button></li>
             </ul>
           )}
@@ -1145,11 +1222,29 @@ export default function Dashboard() {
                   gbpTitle={gbpData?.title}
                   scheduledPosts={scheduledPosts}
                   editingPostId={editingPostId}
+                  
+                  topicType={topicType}
+                  eventTitle={eventTitle}
+                  eventStartDate={eventStartDate}
+                  eventEndDate={eventEndDate}
+                  offerCouponCode={offerCouponCode}
+                  offerRedeemUrl={offerRedeemUrl}
+                  offerTerms={offerTerms}
+                  
                   setPostText={setPostText}
                   setImageUrl={setImageUrl}
                   setButtonType={handleButtonTypeChange}
                   setButtonUrl={setButtonUrl}
                   setScheduledDate={setScheduledDate}
+                  
+                  setTopicType={setTopicType}
+                  setEventTitle={setEventTitle}
+                  setEventStartDate={setEventStartDate}
+                  setEventEndDate={setEventEndDate}
+                  setOfferCouponCode={setOfferCouponCode}
+                  setOfferRedeemUrl={setOfferRedeemUrl}
+                  setOfferTerms={setOfferTerms}
+                  
                   handleImageUpload={handleImageUpload}
                   handlePost={handlePost}
                   handleGenerateAIPost={handleGenerateAIPost}
@@ -1161,19 +1256,32 @@ export default function Dashboard() {
                     setButtonType('NONE');
                     setButtonUrl('');
                     setScheduledDate('');
+                    setTopicType('STANDARD');
+                    setEventTitle('');
+                    setEventStartDate('');
+                    setEventEndDate('');
+                    setOfferCouponCode('');
+                    setOfferRedeemUrl('');
+                    setOfferTerms('');
                     setEditingPostId(null);
                   }}
                 />
               )}
               {activeTab === 'gbp-cards' && <TabGBPCards gbpData={gbpData} />}
               {activeTab === 'gbp-evolution' && <TabGBPEvolution gbpData={gbpData} clientId={selectedClient?.id} />}
+              {activeTab === 'gbp-playbook' && <TabGBPPlaybook />}
               {activeTab === 'integrations' && <TabIntegrations session={session} onSync={fetchSites} selectedClient={selectedClient} />}
             </div>
           )}
 
+<<<<<<< HEAD
           {/* Caso: tem cliente mas sem ficha GBP vinculada */}
           {appMode === 'gbp' && !selectedGbp && selectedClient && activeTab !== 'integrations' && (
             <div className="max-w-md mx-auto my-20 bg-[#161b22] border border-gray-800 rounded-2xl p-8 text-center relative overflow-hidden animate-fadeIn">
+=======
+          {appMode === 'gbp' && !selectedGbp && selectedClient && (
+            <div className="max-w-md mx-auto my-20 bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-2xl p-8 text-center relative overflow-hidden animate-fadeIn">
+>>>>>>> 6134a5f6fd4db878a019b31f51a8bb0dcd6cab1c
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-yellow-500/5 blur-[60px] pointer-events-none" />
               <svg
                 className="text-yellow-500 w-12 h-12 mx-auto mb-4"
@@ -1189,7 +1297,7 @@ export default function Dashboard() {
                 <line x1="12" y1="9" x2="12" y2="13" />
                 <line x1="12" y1="17" x2="12.01" y2="17" />
               </svg>
-              <h3 className="text-white font-black text-lg uppercase tracking-tight">Sem Ficha de Maps</h3>
+              <h3 className="text-gray-900 dark:text-white font-black text-lg uppercase tracking-tight">Sem Ficha de Maps</h3>
               <p className="text-gray-400 text-xs mt-2 leading-relaxed">
                 Este negócio ({selectedClient.name}) não possui uma ficha do Google Meu Negócio vinculada ao EasyLocal.
               </p>

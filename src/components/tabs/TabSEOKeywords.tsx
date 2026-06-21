@@ -66,28 +66,28 @@ export default function TabSEOKeywords({ data }: Props) {
       <h2 className="text-2xl font-bold mb-6">📊 Palavras-chave que mais geram cliques</h2>
       <div className="glass-card rounded-2xl border-[#00ff9d]/10 overflow-hidden">
         <table className="w-full text-left text-sm border-collapse">
-          <thead className="bg-[#161b22] text-gray-400 border-b border-gray-800">
+          <thead className="bg-gray-50 dark:bg-[#161b22] text-gray-500 border-b border-gray-200 dark:border-gray-800">
             <tr>
               <th 
-                className="px-6 py-4 font-bold cursor-pointer hover:text-white transition-colors"
+                className="px-6 py-4 font-bold cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors"
                 onClick={() => handleSort('keyword')}
               >
                 Palavra-chave <SortIcon field="keyword" />
               </th>
               <th 
-                className="px-6 py-4 font-bold cursor-pointer hover:text-white transition-colors"
+                className="px-6 py-4 font-bold cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors"
                 onClick={() => handleSort('clicks')}
               >
                 Cliques <SortIcon field="clicks" />
               </th>
               <th 
-                className="px-6 py-4 font-bold cursor-pointer hover:text-white transition-colors"
+                className="px-6 py-4 font-bold cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors"
                 onClick={() => handleSort('impressions')}
               >
                 Impressões <SortIcon field="impressions" />
               </th>
               <th 
-                className="px-6 py-4 font-bold cursor-pointer hover:text-white transition-colors"
+                className="px-6 py-4 font-bold cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors"
                 onClick={() => handleSort('ctr')}
               >
                 CTR <SortIcon field="ctr" />
@@ -102,8 +102,8 @@ export default function TabSEOKeywords({ data }: Props) {
           </thead>
           <tbody className="divide-y divide-gray-800/50">
             {sortedKeywords.slice(0, 50).map((k: any, i: number) => (
-              <tr key={i} className="hover:bg-[#161b22]/80 transition-colors group">
-                <td className="px-6 py-4 text-white font-medium">{k.keys[0]}</td>
+              <tr key={i} className="hover:bg-gray-50 dark:hover:bg-[#161b22]/80 transition-colors group">
+                <td className="px-6 py-4 text-gray-900 dark:text-white font-medium">{k.keys[0]}</td>
                 <td className="px-6 py-4 text-[#00ff9d] font-bold">{k.clicks}</td>
                 <td className="px-6 py-4 text-gray-400 group-hover:text-gray-200">{k.impressions.toLocaleString()}</td>
                 <td className="px-6 py-4 text-gray-400 group-hover:text-gray-200">{(k.ctr * 100).toFixed(1)}%</td>

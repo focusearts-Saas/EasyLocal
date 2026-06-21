@@ -59,13 +59,13 @@ export default function GSCChart({ history }: Props) {
           className={`p-4 rounded-xl border transition-all text-left flex flex-col gap-1 ${
             activeMetrics.clicks 
             ? 'bg-[#4285f4]/10 border-[#4285f4] shadow-[0_0_15px_rgba(66,133,244,0.1)]' 
-            : 'bg-transparent border-gray-800 opacity-50 hover:opacity-80'
+            : 'bg-transparent border-gray-200 dark:border-gray-800 opacity-50 hover:opacity-80'
           }`}
         >
           <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#4285f4]">
             <MousePointer2 size={12} /> Cliques
           </div>
-          <div className="text-2xl font-black text-white">
+          <div className="text-2xl font-black text-gray-900 dark:text-white">
             {chartData.reduce((acc, curr) => acc + curr.clicks, 0).toLocaleString()}
           </div>
         </button>
@@ -76,13 +76,13 @@ export default function GSCChart({ history }: Props) {
           className={`p-4 rounded-xl border transition-all text-left flex flex-col gap-1 ${
             activeMetrics.impressions 
             ? 'bg-[#8133f1]/10 border-[#8133f1] shadow-[0_0_15px_rgba(129,51,241,0.1)]' 
-            : 'bg-transparent border-gray-800 opacity-50 hover:opacity-80'
+            : 'bg-transparent border-gray-200 dark:border-gray-800 opacity-50 hover:opacity-80'
           }`}
         >
           <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#8133f1]">
             <Eye size={12} /> Impressões
           </div>
-          <div className="text-2xl font-black text-white">
+          <div className="text-2xl font-black text-gray-900 dark:text-white">
             {chartData.reduce((acc, curr) => acc + curr.impressions, 0).toLocaleString()}
           </div>
         </button>
@@ -93,13 +93,13 @@ export default function GSCChart({ history }: Props) {
           className={`p-4 rounded-xl border transition-all text-left flex flex-col gap-1 ${
             activeMetrics.ctr 
             ? 'bg-[#00ff9d]/10 border-[#00ff9d] shadow-[0_0_15px_rgba(0,255,157,0.1)]' 
-            : 'bg-transparent border-gray-800 opacity-50 hover:opacity-80'
+            : 'bg-transparent border-gray-200 dark:border-gray-800 opacity-50 hover:opacity-80'
           }`}
         >
           <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#00ff9d]">
             <Percent size={12} /> CTR Médio
           </div>
-          <div className="text-2xl font-black text-white">
+          <div className="text-2xl font-black text-gray-900 dark:text-white">
             {(chartData.reduce((acc, curr) => acc + Number(curr.ctr), 0) / chartData.length).toFixed(1)}%
           </div>
         </button>
@@ -110,13 +110,13 @@ export default function GSCChart({ history }: Props) {
           className={`p-4 rounded-xl border transition-all text-left flex flex-col gap-1 ${
             activeMetrics.position 
             ? 'bg-[#ffbb00]/10 border-[#ffbb00] shadow-[0_0_15px_rgba(255,187,0,0.1)]' 
-            : 'bg-transparent border-gray-800 opacity-50 hover:opacity-80'
+            : 'bg-transparent border-gray-200 dark:border-gray-800 opacity-50 hover:opacity-80'
           }`}
         >
           <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#ffbb00]">
             <ArrowDownUp size={12} /> Pos. Média
           </div>
-          <div className="text-2xl font-black text-white">
+          <div className="text-2xl font-black text-gray-900 dark:text-white">
             {(chartData.reduce((acc, curr) => acc + Number(curr.position), 0) / chartData.length).toFixed(1)}
           </div>
         </button>
@@ -126,10 +126,10 @@ export default function GSCChart({ history }: Props) {
       <div className="h-[350px] w-full mt-4">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--card-border)" vertical={false} />
             <XAxis 
               dataKey="date" 
-              stroke="#4b5563" 
+              stroke="var(--text-muted)" 
               fontSize={10} 
               tickLine={false} 
               axisLine={false}
@@ -137,7 +137,7 @@ export default function GSCChart({ history }: Props) {
             />
             <YAxis 
               yAxisId="left"
-              stroke="#4b5563" 
+              stroke="var(--text-muted)" 
               fontSize={10} 
               tickLine={false} 
               axisLine={false}
@@ -146,7 +146,7 @@ export default function GSCChart({ history }: Props) {
             <YAxis 
               yAxisId="right"
               orientation="right"
-              stroke="#4b5563" 
+              stroke="var(--text-muted)" 
               fontSize={10} 
               tickLine={false} 
               axisLine={false}
@@ -164,9 +164,9 @@ export default function GSCChart({ history }: Props) {
               hide={!activeMetrics.position}
             />
             <Tooltip 
-              contentStyle={{ backgroundColor: '#161b22', border: '1px solid #374151', borderRadius: '12px' }}
+              contentStyle={{ backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)', borderRadius: '12px', color: 'var(--tooltip-text)' }}
               itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
-              labelStyle={{ color: '#9ca3af', marginBottom: '4px', fontSize: '10px' }}
+              labelStyle={{ color: 'var(--text-muted)', marginBottom: '4px', fontSize: '10px' }}
             />
             
             {activeMetrics.impressions && (
@@ -177,7 +177,7 @@ export default function GSCChart({ history }: Props) {
                 stroke="#8133f1"
                 strokeWidth={3}
                 dot={false}
-                activeDot={{ r: 6, stroke: '#8133f1', strokeWidth: 2, fill: '#0d1117' }}
+                activeDot={{ r: 6, stroke: '#8133f1', strokeWidth: 2, fill: 'var(--bg-color)' }}
                 animationDuration={1000}
               />
             )}
@@ -190,7 +190,7 @@ export default function GSCChart({ history }: Props) {
                 stroke="#4285f4"
                 strokeWidth={3}
                 dot={false}
-                activeDot={{ r: 6, stroke: '#4285f4', strokeWidth: 2, fill: '#0d1117' }}
+                activeDot={{ r: 6, stroke: '#4285f4', strokeWidth: 2, fill: 'var(--bg-color)' }}
                 animationDuration={1000}
               />
             )}
