@@ -1274,14 +1274,10 @@ export default function Dashboard() {
             </div>
           )}
 
-<<<<<<< HEAD
           {/* Caso: tem cliente mas sem ficha GBP vinculada */}
           {appMode === 'gbp' && !selectedGbp && selectedClient && activeTab !== 'integrations' && (
-            <div className="max-w-md mx-auto my-20 bg-[#161b22] border border-gray-800 rounded-2xl p-8 text-center relative overflow-hidden animate-fadeIn">
-=======
-          {appMode === 'gbp' && !selectedGbp && selectedClient && (
             <div className="max-w-md mx-auto my-20 bg-white dark:bg-[#161b22] border border-gray-200 dark:border-gray-800 rounded-2xl p-8 text-center relative overflow-hidden animate-fadeIn">
->>>>>>> 6134a5f6fd4db878a019b31f51a8bb0dcd6cab1c
+
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-yellow-500/5 blur-[60px] pointer-events-none" />
               <svg
                 className="text-yellow-500 w-12 h-12 mx-auto mb-4"
