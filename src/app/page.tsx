@@ -1171,7 +1171,8 @@ export default function Dashboard() {
             </div>
           )}
 
-          {appMode === 'gbp' && !selectedGbp && selectedClient && (
+          {/* Caso: tem cliente mas sem ficha GBP vinculada */}
+          {appMode === 'gbp' && !selectedGbp && selectedClient && activeTab !== 'integrations' && (
             <div className="max-w-md mx-auto my-20 bg-[#161b22] border border-gray-800 rounded-2xl p-8 text-center relative overflow-hidden animate-fadeIn">
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-yellow-500/5 blur-[60px] pointer-events-none" />
               <svg
@@ -1203,6 +1204,13 @@ export default function Dashboard() {
                   Conectar Integrações
                 </button>
               </div>
+            </div>
+          )}
+
+          {/* TabIntegrations acessível mesmo sem ficha GBP — essencial para sincronizar perfis */}
+          {appMode === 'gbp' && !selectedGbp && activeTab === 'integrations' && (
+            <div className="max-w-6xl mx-auto">
+              <TabIntegrations session={session} onSync={fetchSites} selectedClient={selectedClient} />
             </div>
           )}
         </main>
