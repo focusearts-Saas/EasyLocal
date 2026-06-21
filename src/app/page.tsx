@@ -128,15 +128,33 @@ export default function Dashboard() {
 
   const fetchSites = async () => {
     try {
-      const res = await fetch('/api/sites', { cache: 'no-store' });
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      const token = currentSession?.access_token || sessionRef.current?.access_token;
+
+      const res = await fetch('/api/sites', {
+        cache: 'no-store',
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      });
       const d = await res.json();
       if (Array.isArray(d)) {
         setSites(d);
         if (d.length > 0) {
           handleSelectClient(d[0]);
         } else {
-          // Sem negócio cadastrado: manda para onboarding
-          window.location.href = '/onboarding';
+          // Sem clientes: verificar se já tem integração Google ativa
+          const { data: integrationData } = await supabase
+            .from('google_integrations')
+            .select('id')
+            .maybeSingle();
+
+          if (integrationData) {
+            // Tem integração mas sem clientes → mostrar aba de integrações para sincronizar
+            setActiveTab('integrations');
+            setAppMode('gbp');
+          } else {
+            // Sem integração e sem clientes → onboarding
+            window.location.href = '/onboarding';
+          }
         }
       }
     } catch (err) {
